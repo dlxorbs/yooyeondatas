@@ -58,35 +58,29 @@ export default function PostWritePage(props) {
   const done = function () {
     //이미지 파이어 스토리지로 넘기기
 
-    const timestamp = new Date().getTime().toString();
-
     // 백그라운드
     var storageRef = storage.ref();
     var root = storageRef.child(id + "/" + "background");
     root.put(backimg).then((img) => {
-      getDownloadURL(img.ref)
-        .then((url) => {
-          console.log(url);
-          // 기존 데이터는 남기고 업데이트 하기 위하여 사용
-          setBackground((prev) => ({
-            ...prev,
-            img: url,
-          }));
-        })
-        .catch((error) => {
-          // Handle any errors
-        });
+      getDownloadURL(img.ref).then((url) => {
+        console.log(url);
+        // 기존 데이터는 남기고 업데이트 하기 위하여 사용
+        setBackground((prev) => ({
+          ...prev,
+          img: url,
+        }));
+      });
     });
 
     // 리서치
     var res = storageRef.child(id + "/" + "research");
     res.put(reseachimg).then((img) => {
       getDownloadURL(img.ref).then((url) => {
-        console.log(url);
         setResearch((prev) => ({
           ...prev,
           img: url,
         }));
+        console.log(research);
       });
     });
 
@@ -170,7 +164,6 @@ export default function PostWritePage(props) {
         video: "비디오 주소",
       })
       .then(() => {
-        // console.log(thumb);
         nav("/");
       });
   };
