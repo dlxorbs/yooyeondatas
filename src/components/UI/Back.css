@@ -29,7 +29,11 @@
 }
 
 h4 {
-  width: 550px;
+  width: var(--width);
   margin: 0;
   font-size: 36px;
+}
+
+.center {
+  flex-direction: column;
 }

@@ -2,21 +2,20 @@ import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "../UI/Button";
 import TextInput from "../UI/TextInput";
-import Code from "../UI/Code";
 import styles from "./Page.module.css";
 import $ from "jquery";
-import Prism from "prismjs";
-import "prismjs/themes/prism-tomorrow.css";
 import {
   ref,
   uploadBytesResumable,
   getDownloadURL,
   getStorage,
 } from "firebase/storage";
+import symbol from "../Img/symbol.png";
+import symbol1200 from "../Img/1200symbol.png";
 import { db, storage } from "../../firebase.js";
 import Right from "../UI/Right";
-import Img from "../UI/Img";
 import Left from "../UI/Left";
+import Center from "../UI/Center";
 
 export default function PostWritePage(props) {
   const nav = useNavigate();
@@ -30,8 +29,13 @@ export default function PostWritePage(props) {
   const [backimg, setBackimg] = useState("");
   const [backthumb, setbackthumb] = useState("");
 
-  const [reseachimg, setResearchimg] = useState("");
-  const [reseachthumb, setReseachthumb] = useState("");
+  const [researchimg, setResearchimg] = useState("");
+  const [researchthumb, setResearchthumb] = useState("");
+
+  // 텍스트 길이 제한
+  const [backtext, setBacktext] = useState("");
+  const [restext, setRestext] = useState("");
+  const [goaltext, setGoaltext] = useState("");
 
   // 학생 데이터 변수 지정
   const [stundetinfo, setStundetinfo] = useState("");
@@ -55,94 +59,36 @@ export default function PostWritePage(props) {
     content: "",
   });
 
-  const done = function () {
+  const done = async function () {
     //이미지 파이어 스토리지로 넘기기
 
     // 백그라운드
     var storageRef = storage.ref();
-    var root = storageRef.child(id + "/" + "background");
-    root.put(backimg).then((img) => {
-      getDownloadURL(img.ref).then((url) => {
-        console.log(url);
-        // 기존 데이터는 남기고 업데이트 하기 위하여 사용
-        setBackground((prev) => ({
-          ...prev,
-          img: url,
-        }));
-      });
-    });
+    // 백그라운드 이미지 업로드
+    const backgroundRef = storageRef.child(id + "/" + "background");
+    await backgroundRef.put(backimg);
+    const backgroundUrl = await getDownloadURL(backgroundRef);
 
-    // 리서치
-    var res = storageRef.child(id + "/" + "research");
-    res.put(reseachimg).then((img) => {
-      getDownloadURL(img.ref).then((url) => {
-        setResearch((prev) => ({
-          ...prev,
-          img: url,
-        }));
-        console.log(research);
-      });
-    });
-
-    // // 목표
-    // var goals = storageRef.child(id + "/" + "goals");
-    // goals.put(file).then((img) => {
-    //   getDownloadURL(img.ref)
-    //     .then((url) => {
-    //       console.log(url);
-    //     })
-    //     .catch((error) => {
-    //       // Handle any errors
-    //     });
-    // });
-    // // 기능1
-    // var function1 = storageRef.child(id + "/" + "function01");
-    // function1.put(file).then((img) => {
-    //   getDownloadURL(img.ref)
-    //     .then((url) => {
-    //       console.log(url);
-    //     })
-    //     .catch((error) => {
-    //       // Handle any errors
-    //     });
-    // });
-    // // 기능2
-    // var function2 = storageRef.child(id + "/" + "function02");
-    // function2.put(file).then((img) => {
-    //   getDownloadURL(img.ref)
-    //     .then((url) => {
-    //       console.log(url);
-    //     })
-    //     .catch((error) => {
-    //       // Handle any errors
-    //     });
-    // });
-    // // 기능3
-    // var function3 = storageRef.child(id + "/" + "function03");
-    // function3.put(file).then((img) => {
-    //   getDownloadURL(img.ref)
-    //     .then((url) => {
-    //       console.log(url);
-    //       // 기존 데이터는 남기고 업데이트 하기 위하여 사용
-    //     })
-    //     .catch((error) => {
-    //       // Handle any errors
-    //     });
-    // });
-  };
-
-  const update = () => {
-    const timestamp = new Date().getTime().toString();
+    // 리서치 이미지 업로드
+    const researchRef = storageRef.child(id + "/" + "research");
+    await researchRef.put(researchimg);
+    const researchUrl = await getDownloadURL(researchRef);
 
     db.collection("post")
-      .doc(timestamp)
+      .doc(id)
       .set({
         id: id,
         studentinfo: major,
         major: major,
         main: main,
-        background: background,
-        research: research,
+        background: {
+          img: backgroundUrl,
+          content: background.content,
+        },
+        research: {
+          img: researchUrl,
+          content: research.content,
+        },
         goals: goal,
         function: [
           {
@@ -167,6 +113,7 @@ export default function PostWritePage(props) {
         nav("/");
       });
   };
+
   return (
     <div className={styles.Page_Wrapper}>
       <div className={styles.Page_SecondWrapper}>
@@ -187,24 +134,33 @@ export default function PostWritePage(props) {
         />
 
         <Left
+          size={"590X460"}
+          imgwidth={590}
+          imgheight={460}
           file={"background"}
           head={"Background"}
+          width={550}
           onChange={(e) => {
             setBackground((prev) => ({
               ...prev,
               content: e.target.value,
             }));
 
-            e.target.style.height = "30px";
-            e.target.style.height = e.target.scrollHeight + "px";
+            console.log(e.target.value.length);
+            const length = e.target.value.substring(0, 525);
+            setBacktext(length);
+            if (length >= 525) {
+              alert("글자초과됨");
+            }
           }}
+          text={backtext}
           value={background.content}
           onClickImg={(e) => {
             // file클릭 이벤트 추가
             $("#background").click();
           }}
           display={backthumb != "" && "none"}
-          src={backthumb}
+          src={backthumb || symbol}
           onChangeImg={(e) => {
             const file = e.target.files[0];
             if (file) {
@@ -220,24 +176,31 @@ export default function PostWritePage(props) {
         />
 
         <Right
+          size={"590X460"}
+          imgwidth={590}
+          imgheight={460}
           file={"research"}
           head={"Research"}
+          width={550}
           onChange={(e) => {
             setResearch((prev) => ({
               ...prev,
               content: e.target.value,
             }));
-
-            e.target.style.height = "30px";
-            e.target.style.height = e.target.scrollHeight + "px";
+            const length = e.target.value.substring(0, 525);
+            setRestext(length);
+            if (length >= 525) {
+              alert("글자초과됨");
+            }
           }}
+          text={restext}
           value={research.content}
           onClickImg={(e) => {
             // file클릭 이벤트 추가
             $("#research").click();
           }}
-          display={reseachthumb != "" && "none"}
-          src={reseachthumb}
+          display={researchthumb != "" && "none"}
+          src={researchthumb || symbol}
           onChangeImg={(e) => {
             const file = e.target.files[0];
             if (file) {
@@ -245,7 +208,44 @@ export default function PostWritePage(props) {
               const reader = new FileReader();
               reader.onload = (e) => {
                 const id = new Date().getTime().toString();
-                setReseachthumb(e.target.result);
+                setResearchthumb(e.target.result);
+              };
+              reader.readAsDataURL(file);
+            }
+          }}
+        />
+
+        <Center
+          size={"1200X460"}
+          imgwidth={1200}
+          imgheight={460}
+          file={"background"}
+          head={"Background"}
+          width={550}
+          onChange={(e) => {
+            setBackground((prev) => ({
+              ...prev,
+              content: e.target.value,
+            }));
+
+            e.target.style.height = "30px";
+            e.target.style.height = e.target.scrollHeight + "px";
+          }}
+          value={background.content}
+          onClickImg={(e) => {
+            // file클릭 이벤트 추가
+            $("#background").click();
+          }}
+          display={backthumb != "" && "none"}
+          src={backthumb || symbol1200}
+          onChangeImg={(e) => {
+            const file = e.target.files[0];
+            if (file) {
+              setBackimg(file);
+              const reader = new FileReader();
+              reader.onload = (e) => {
+                const id = new Date().getTime().toString();
+                setbackthumb(e.target.result);
               };
               reader.readAsDataURL(file);
             }
@@ -261,7 +261,6 @@ export default function PostWritePage(props) {
             // content == "" || title == ""
             //   ? alert("내용을 입력해주세요."):
             done();
-            update();
           }}
         />
       </div>

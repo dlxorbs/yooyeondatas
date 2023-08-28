@@ -7,19 +7,31 @@ export default function Left(props) {
   return (
     <div className="BackgroundContianer">
       <div className="text">
-        <h4>{props.head || "dlxorbs"}</h4>
+        <h4
+          style={{
+            "--width": props.width + "px",
+          }}
+        >
+          {props.head || "dlxorbs"}
+        </h4>
         <TextInput
-          height={400}
-          minheight={62}
+          height={460}
           fontsize={18}
           fontweight={500}
           lineheight={160}
           placeholder={"내용 없음"}
           value={props.value}
           onChange={props.onChange}
+          overflow={"hidden"}
+          text={props.text}
+          maxlength={props.maxlength}
+          limit={"525자"}
         />
       </div>
       <ScrollItem
+        imgwidth={props.imgwidth}
+        imgheight={props.imgheight}
+        size={props.size}
         file={props.file}
         onClick={props.onClickImg}
         src={props.src}

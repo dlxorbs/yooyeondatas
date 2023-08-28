@@ -21,7 +21,7 @@
   background-color: var(--backgroundcolor);
   white-space: normal;
   resize: none;
-  overflow: inherit;
+  overflow: var(--overflow);
   overflow-wrap: anywhere;
   border: none;
 

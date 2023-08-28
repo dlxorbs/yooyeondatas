@@ -6,8 +6,9 @@
 
 .Header {
   width: 100vw;
-  background-color: #ffffff;
-  height: 80px;
+  background: #ffffff60;
+  backdrop-filter: blur(4px);
+  height: 64px;
   display: flex;
   justify-content: center;
   align-items: center;

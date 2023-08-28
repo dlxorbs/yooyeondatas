@@ -3,9 +3,16 @@ import TextInput from "./TextInput";
 import ScrollItem from "./ScrollItem";
 import "./Back.css";
 
-export default function Right(props) {
+export default function Center(props) {
   return (
-    <div className="BackgroundContianer">
+    <div className="BackgroundContianer center">
+      <h4
+        style={{
+          "--width": props.width + "px",
+        }}
+      >
+        {props.head || "dlxorbs"}
+      </h4>
       <ScrollItem
         imgwidth={props.imgwidth}
         imgheight={props.imgheight}
@@ -17,25 +24,17 @@ export default function Right(props) {
         display={props.display}
       />
       <div className="text">
-        <h4
-          style={{
-            "--width": props.width + "px",
-          }}
-        >
-          {props.head || "dlxorbs"}
-        </h4>
         <TextInput
-          height={460}
+          height={95}
+          minheight={120}
           fontsize={18}
           fontweight={500}
           lineheight={160}
           placeholder={"내용 없음"}
           value={props.value}
           onChange={props.onChange}
-          overflow={"hidden"}
-          text={props.text}
-          maxlength={props.maxlength}
-          limit={"525자"}
+          maxlength={230}
+          limit={"230자"}
         />
       </div>
     </div>

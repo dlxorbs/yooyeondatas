@@ -1,16 +1,14 @@
 .scrollitem {
-  width: 590px;
-  height: 459px;
+  width: var(--imgwidth);
+  height: var(--imgheight);
   display: flex;
 
   justify-content: center;
 
   align-items: center;
   gap: 12px;
-  background-color: #b9b9b9;
 }
 .scrollitem:hover {
-  background-color: #b9b9b9;
 }
 
 .smimg {
