@@ -6,13 +6,6 @@ import "./Back.css";
 export default function Center(props) {
   return (
     <div className="BackgroundContianer center">
-      <h4
-        style={{
-          "--width": props.width + "px",
-        }}
-      >
-        {props.head || "dlxorbs"}
-      </h4>
       <ScrollItem
         imgwidth={props.imgwidth}
         imgheight={props.imgheight}
@@ -24,6 +17,13 @@ export default function Center(props) {
         display={props.display}
       />
       <div className="text">
+        <h4
+          style={{
+            "--width": props.width + "px",
+          }}
+        >
+          {props.head || "dlxorbs"}
+        </h4>
         <TextInput
           height={95}
           minheight={120}
@@ -34,6 +34,7 @@ export default function Center(props) {
           value={props.value}
           onChange={props.onChange}
           maxlength={230}
+          text={props.text}
           limit={"230자"}
         />
       </div>

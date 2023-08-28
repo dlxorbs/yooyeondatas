@@ -11,6 +11,7 @@ import {
   getStorage,
 } from "firebase/storage";
 import symbol from "../Img/symbol.png";
+import symbol700 from "../Img/700symbol.png";
 import symbol1200 from "../Img/1200symbol.png";
 import { db, storage } from "../../firebase.js";
 import Right from "../UI/Right";
@@ -32,11 +33,25 @@ export default function PostWritePage(props) {
   const [researchimg, setResearchimg] = useState("");
   const [researchthumb, setResearchthumb] = useState("");
 
+  const [goalimg, setGoalimg] = useState("");
+  const [goalthumb, setGoalthumb] = useState("");
+
+  const [function01img, setFunction01img] = useState("");
+  const [function01thumb, setFunction01thumb] = useState("");
+
+  const [function02img, setFunction02img] = useState("");
+  const [function02thumb, setFunction02thumb] = useState("");
+
+  const [function03img, setFunction03img] = useState("");
+  const [function03thumb, setFunction03thumb] = useState("");
+
   // 텍스트 길이 제한
   const [backtext, setBacktext] = useState("");
   const [restext, setRestext] = useState("");
   const [goaltext, setGoaltext] = useState("");
-
+  const [func01text, setFunc01text] = useState("");
+  const [func02text, setFunc02text] = useState("");
+  const [func03text, setFunc03text] = useState("");
   // 학생 데이터 변수 지정
   const [stundetinfo, setStundetinfo] = useState("");
   const [major, setMajor] = useState("");
@@ -59,6 +74,29 @@ export default function PostWritePage(props) {
     content: "",
   });
 
+  const [func, setFunc] = useState([
+    {
+      img: "",
+      content: "",
+    },
+    {
+      img: "",
+      content: "",
+    },
+    {
+      img: "",
+      content: "",
+    },
+  ]);
+
+  const ContentChange = (index, value) => {
+    setFunc((prevFunc) => {
+      const updatedFunc = [...prevFunc];
+      updatedFunc[index].content = value;
+      return updatedFunc;
+    });
+  };
+
   const done = async function () {
     //이미지 파이어 스토리지로 넘기기
 
@@ -73,6 +111,24 @@ export default function PostWritePage(props) {
     const researchRef = storageRef.child(id + "/" + "research");
     await researchRef.put(researchimg);
     const researchUrl = await getDownloadURL(researchRef);
+
+    // 골 이미지 업로드
+    const goalRef = storageRef.child(id + "/" + "goal");
+    await goalRef.put(goalimg);
+    const goalUrl = await getDownloadURL(goalRef);
+
+    // 골 이미지 업로드
+    const function01Ref = storageRef.child(id + "/" + "function01");
+    await function01Ref.put(function01img);
+    const function01Url = await getDownloadURL(function01Ref);
+
+    const function02Ref = storageRef.child(id + "/" + "function02");
+    await function02Ref.put(function02img);
+    const function02Url = await getDownloadURL(function02Ref);
+
+    const function03Ref = storageRef.child(id + "/" + "function03");
+    await function03Ref.put(function03img);
+    const function03Url = await getDownloadURL(function03Ref);
 
     db.collection("post")
       .doc(id)
@@ -89,22 +145,22 @@ export default function PostWritePage(props) {
           img: researchUrl,
           content: research.content,
         },
-        goals: goal,
-        function: [
+        goals: {
+          img: goalUrl,
+          content: goal.content,
+        },
+        func: [
           {
-            img: "이미지 주소",
-            content:
-              "안녕하세요, 소플입니다.\n이번 글에서는 리액트에서 리스트를 렌더링하는 방법에 대해서 배워보겠습니다.",
+            img: function01Url,
+            content: func[0].content,
           },
           {
-            img: "이미지 주소",
-            content:
-              "안녕하세요, 소플입니다.\n이번 글에서는 리액트에서 리스트를 렌더링하는 방법에 대해서 배워보겠습니다.",
+            img: function02Url,
+            content: func[1].content,
           },
           {
-            img: "이미지 주소",
-            content:
-              "안녕하세요, 소플입니다.\n이번 글에서는 리액트에서 리스트를 렌더링하는 방법에 대해서 배워보겠습니다.",
+            img: function03Url,
+            content: func[2].content,
           },
         ],
         video: "비디오 주소",
@@ -145,11 +201,11 @@ export default function PostWritePage(props) {
               ...prev,
               content: e.target.value,
             }));
-
             console.log(e.target.value.length);
-            const length = e.target.value.substring(0, 525);
+            const length = e.target.value.length;
             setBacktext(length);
             if (length >= 525) {
+              e.target.value = e.target.value.substring(0, 525);
               alert("글자초과됨");
             }
           }}
@@ -187,10 +243,11 @@ export default function PostWritePage(props) {
               ...prev,
               content: e.target.value,
             }));
-            const length = e.target.value.substring(0, 525);
+            const length = e.target.value.length;
             setRestext(length);
             if (length >= 525) {
               alert("글자초과됨");
+              e.target.value = e.target.value.substring(0, 525);
             }
           }}
           text={restext}
@@ -219,33 +276,118 @@ export default function PostWritePage(props) {
           size={"1200X460"}
           imgwidth={1200}
           imgheight={460}
-          file={"background"}
-          head={"Background"}
+          file={"goal"}
+          head={"Goal"}
           width={550}
+          text={goaltext}
           onChange={(e) => {
-            setBackground((prev) => ({
+            setGoal((prev) => ({
               ...prev,
               content: e.target.value,
             }));
 
-            e.target.style.height = "30px";
-            e.target.style.height = e.target.scrollHeight + "px";
+            const length = e.target.value.length;
+            setGoaltext(length);
+            if (length >= 230) {
+              alert("글자초과됨");
+              e.target.value = e.target.value.substring(0, 230);
+            }
           }}
-          value={background.content}
+          value={goal.content}
           onClickImg={(e) => {
             // file클릭 이벤트 추가
-            $("#background").click();
+            $("#goal").click();
           }}
-          display={backthumb != "" && "none"}
-          src={backthumb || symbol1200}
+          display={goalthumb != "" && "none"}
+          src={goalthumb || symbol1200}
           onChangeImg={(e) => {
             const file = e.target.files[0];
             if (file) {
-              setBackimg(file);
+              setGoalimg(file);
               const reader = new FileReader();
               reader.onload = (e) => {
                 const id = new Date().getTime().toString();
-                setbackthumb(e.target.result);
+                setGoalthumb(e.target.result);
+              };
+              reader.readAsDataURL(file);
+            }
+          }}
+        />
+        {/* /기능01/ */}
+
+        <Left
+          size={"752X500"}
+          imgwidth={752}
+          imgheight={500}
+          file={"function01"}
+          head={"Function01"}
+          width={373}
+          onChange={(e) => {
+            const { value } = e.target;
+            ContentChange(0, value); // 첫 번째 func 요소에 content 업데이트
+
+            const length = e.target.value.length;
+            setFunc01text(length);
+            if (length >= 525) {
+              e.target.value = e.target.value.substring(0, 525);
+              alert("글자초과됨");
+            }
+          }}
+          text={func01text}
+          value={func[0].content}
+          onClickImg={(e) => {
+            // file클릭 이벤트 추가
+            $("#function01").click();
+          }}
+          display={function01thumb != "" && "none"}
+          src={function01thumb || symbol700}
+          onChangeImg={(e) => {
+            const file = e.target.files[0];
+            if (file) {
+              setFunction01img(file);
+              const reader = new FileReader();
+              reader.onload = (e) => {
+                const id = new Date().getTime().toString();
+                setFunction01thumb(e.target.result);
+              };
+              reader.readAsDataURL(file);
+            }
+          }}
+        />
+        {/* 기능 02 */}
+        <Right
+          size={"752X500"}
+          imgwidth={752}
+          imgheight={500}
+          file={"function02"}
+          head={"Function02"}
+          width={373}
+          onChange={(e) => {
+            const { value } = e.target;
+            ContentChange(1, value); // 첫 번째 func 요소에 content 업데이트
+
+            const length = e.target.value.length;
+            setFunc02text(length);
+            if (length >= 525) {
+              e.target.value = e.target.value.substring(0, 525);
+              alert("글자초과됨");
+            }
+          }}
+          text={func02text}
+          value={func[1].content}
+          onClickImg={(e) => {
+            // file클릭 이벤트 추가
+            $("#function02").click();
+          }}
+          display={function02thumb != "" && "none"}
+          src={function02thumb || symbol700}
+          onChangeImg={(e) => {
+            const file = e.target.files[0];
+            if (file) {
+              setFunction02img(file);
+              const reader = new FileReader();
+              reader.onload = (e) => {
+                setFunction02thumb(e.target.result);
               };
               reader.readAsDataURL(file);
             }
