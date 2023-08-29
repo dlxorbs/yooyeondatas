@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Button from "../UI/Button";
 import TextInput from "../UI/TextInput";
 import styles from "./Page.module.css";
@@ -22,7 +22,10 @@ import Center from "../UI/Center";
 
 export default function PostWritePage(props) {
   const nav = useNavigate();
+  const location = useLocation();
   const [title, setTitle] = useState("");
+  // useLocation을 이용하여 로그인 데이터를 불러오기
+  const [data, setData] = useState(location.state?.data);
   const [id, setID] = useState("2018194031");
   const [content, setContent] = useState("");
 
@@ -30,25 +33,25 @@ export default function PostWritePage(props) {
 
   // 이미지 적용시 파일들
   const [mainimg, setMainimg] = useState("");
-  const [mainthumb, setMainthumb] = useState("");
+  const [mainthumb, setMainthumb] = useState(symbol1920);
 
   const [backimg, setBackimg] = useState("");
-  const [backthumb, setbackthumb] = useState("");
+  const [backthumb, setbackthumb] = useState(symbol);
 
   const [researchimg, setResearchimg] = useState("");
-  const [researchthumb, setResearchthumb] = useState("");
+  const [researchthumb, setResearchthumb] = useState(symbol);
 
   const [goalimg, setGoalimg] = useState("");
-  const [goalthumb, setGoalthumb] = useState("");
+  const [goalthumb, setGoalthumb] = useState(symbol1200);
 
   const [function01img, setFunction01img] = useState("");
-  const [function01thumb, setFunction01thumb] = useState("");
+  const [function01thumb, setFunction01thumb] = useState(symbol700);
 
   const [function02img, setFunction02img] = useState("");
-  const [function02thumb, setFunction02thumb] = useState("");
+  const [function02thumb, setFunction02thumb] = useState(symbol700);
 
   const [function03img, setFunction03img] = useState("");
-  const [function03thumb, setFunction03thumb] = useState("");
+  const [function03thumb, setFunction03thumb] = useState(symbol700);
 
   // 텍스트 길이 제한
   const [maintext, setMaintext] = useState("");
@@ -59,9 +62,9 @@ export default function PostWritePage(props) {
   const [func01text, setFunc01text] = useState("");
   const [func02text, setFunc02text] = useState("");
   const [func03text, setFunc03text] = useState("");
+
   // 학생 데이터 변수 지정
-  const [stundetinfo, setStundetinfo] = useState("");
-  const [major, setMajor] = useState("");
+  const [student, setStudent] = useState(data);
   const [main, setMain] = useState({
     works: "",
     img: "",
@@ -95,6 +98,50 @@ export default function PostWritePage(props) {
       content: "",
     },
   ]);
+  let mainUrl,
+    backgroundUrl,
+    researchUrl,
+    goalUrl,
+    function01Url,
+    function02Url,
+    function03Url;
+
+  useEffect(() => {
+    console.log(function03Url);
+  }, [function03Url]);
+
+  // 작성했던 데이터 불러오기
+  useEffect(function () {
+    console.log(data);
+    let Datas = {};
+    db.collection("post")
+      .doc(data.studentid + "_" + data.type)
+      .get()
+      .then((doc) => {
+        if (doc.exists) {
+          Datas = doc.data();
+          setMainthumb(Datas.main?.img || symbol1920); // Datas.mainImg는 받아온 데이터의 필드명에 따라 수정해야 합니다.
+          setbackthumb(Datas.background?.img || symbol);
+          setResearchthumb(Datas.research?.img || symbol);
+          setGoalthumb(Datas.goals?.img || symbol1200);
+          setFunction01thumb(
+            Datas.func && Datas.func[0] && Datas.func[0].img
+              ? Datas.func[0].img
+              : symbol700
+          );
+          setFunction02thumb(
+            Datas.func && Datas.func[1] && Datas.func[1].img
+              ? Datas.func[1].img
+              : symbol700
+          );
+          setFunction03thumb(
+            Datas.func && Datas.func[2] && Datas.func[2].img
+              ? Datas.func[2].img
+              : symbol700
+          );
+        }
+      });
+  }, []);
 
   const ContentChange = (index, value) => {
     setFunc((prevFunc) => {
@@ -110,81 +157,114 @@ export default function PostWritePage(props) {
     // 백그라운드
     var storageRef = storage.ref();
 
-    // 백그라운드 이미지 업로드
-    const mainRef = storageRef.child(id + "/" + "main");
-    await mainRef.put(mainimg);
-    const mainUrl = await getDownloadURL(mainRef);
+    // 이미지 업로드와 URL 저장 부분
+    if (mainimg) {
+      const mainRef = storageRef.child(
+        data.studentid + "_" + data.type + "/" + "main"
+      );
+      await mainRef.put(mainimg);
+      mainUrl = await getDownloadURL(mainRef);
+    }
+    if (backimg) {
+      const backgroundRef = storageRef.child(
+        data.studentid + "_" + data.type + "/" + "background"
+      );
+      await backgroundRef.put(backimg);
+      backgroundUrl = await getDownloadURL(backgroundRef);
+    }
+    if (researchimg) {
+      const researchRef = storageRef.child(
+        data.studentid + "_" + data.type + "/" + "research"
+      );
+      await researchRef.put(researchimg);
+      researchUrl = await getDownloadURL(researchRef);
+    }
+    if (goalimg) {
+      const goalRef = storageRef.child(
+        data.studentid + "_" + data.type + "/" + "goal"
+      );
+      await goalRef.put(goalimg);
+      goalUrl = await getDownloadURL(goalRef);
+    }
+    if (function01img) {
+      const function01Ref = storageRef.child(
+        data.studentid + "_" + data.type + "/" + "function01"
+      );
+      await function01Ref.put(function01img);
+      function01Url = await getDownloadURL(function01Ref);
+    }
+    if (function02img) {
+      const function02Ref = storageRef.child(
+        data.studentid + "_" + data.type + "/" + "function02"
+      );
+      await function02Ref.put(function02img);
+      function02Url = await getDownloadURL(function02Ref);
+    }
+    if (function03img) {
+      const function03Ref = storageRef.child(
+        data.studentid + "_" + data.type + "/" + "function03"
+      );
+      await function03Ref.put(function03img);
+      function03Url = await getDownloadURL(function03Ref);
+    }
 
-    // 백그라운드 이미지 업로드
-    const backgroundRef = storageRef.child(id + "/" + "background");
-    await backgroundRef.put(backimg);
-    const backgroundUrl = await getDownloadURL(backgroundRef);
+    // db 업데이트 부분
+    const docId = await db
+      .collection("post")
+      .doc(data.studentid + "_" + data.type)
+      .get();
 
-    // 리서치 이미지 업로드
-    const researchRef = storageRef.child(id + "/" + "research");
-    await researchRef.put(researchimg);
-    const researchUrl = await getDownloadURL(researchRef);
-
-    // 골 이미지 업로드
-    const goalRef = storageRef.child(id + "/" + "goal");
-    await goalRef.put(goalimg);
-    const goalUrl = await getDownloadURL(goalRef);
-
-    // 기능 이미지 업로드
-    const function01Ref = storageRef.child(id + "/" + "function01");
-    await function01Ref.put(function01img);
-    const function01Url = await getDownloadURL(function01Ref);
-
-    const function02Ref = storageRef.child(id + "/" + "function02");
-    await function02Ref.put(function02img);
-    const function02Url = await getDownloadURL(function02Ref);
-
-    const function03Ref = storageRef.child(id + "/" + "function03");
-    await function03Ref.put(function03img);
-    const function03Url = await getDownloadURL(function03Ref);
-
-    db.collection("post")
-      .doc(id)
-      .set({
-        id: id,
-        studentinfo: major,
-        major: major,
-        main: {
-          works: main.works,
-          img: mainUrl,
-          oneline: main.oneline,
+    const updatedData = {
+      main: {
+        works: main.works,
+        img: mainUrl !== undefined ? mainUrl : "",
+        oneline: main.oneline,
+      },
+      background: {
+        img: backgroundUrl !== undefined ? backgroundUrl : "", // 유효한 URL이 없을 경우에는 빈 문자열로 설정
+        content: background.content,
+      },
+      research: {
+        img: researchUrl !== undefined ? researchUrl : "",
+        content: research.content,
+      },
+      goals: {
+        img: goalUrl !== undefined ? goalUrl : "",
+        content: goal.content,
+      },
+      func: [
+        {
+          img: function01Url !== undefined ? function01Url : "",
+          content: func[0].content,
         },
-        background: {
-          img: backgroundUrl,
-          content: background.content,
+        {
+          img: function02Url !== undefined ? function02Url : "",
+          content: func[1].content,
         },
-        research: {
-          img: researchUrl,
-          content: research.content,
+        {
+          img: function03Url !== undefined ? function03Url : "",
+          content: func[2].content,
         },
-        goals: {
-          img: goalUrl,
-          content: goal.content,
-        },
-        func: [
-          {
-            img: function01Url,
-            content: func[0].content,
-          },
-          {
-            img: function02Url,
-            content: func[1].content,
-          },
-          {
-            img: function03Url,
-            content: func[2].content,
-          },
-        ],
-        video: "비디오 주소",
-      })
-      .then(() => {
-        nav("/");
-      });
+      ],
+      video: "비디오 주소",
+    };
+    console.log(updatedData);
+
+    if (docId.exists) {
+      db.collection("post")
+        .doc(data.studentid + "_" + data.type)
+        .update(updatedData)
+        .then(() => {
+          nav("/");
+        });
+    } else {
+      db.collection("post")
+        .doc(data.studentid + "_" + data.type)
+        .set(updatedData)
+        .then(() => {
+          nav("/");
+        });
+    }
   };
 
   return (
@@ -225,9 +305,10 @@ export default function PostWritePage(props) {
         onClick={(e) => {
           // file클릭 이벤트 추가
           $("#main").click();
+          console.log(data);
         }}
         display={mainthumb != "" && "none"}
-        src={mainthumb || symbol1920}
+        src={mainthumb}
         onChangeImg={(e) => {
           const file = e.target.files[0];
           if (file) {
@@ -269,7 +350,7 @@ export default function PostWritePage(props) {
             $("#background").click();
           }}
           display={backthumb != "" && "none"}
-          src={backthumb || symbol}
+          src={backthumb}
           onChangeImg={(e) => {
             const file = e.target.files[0];
             if (file) {
@@ -310,7 +391,7 @@ export default function PostWritePage(props) {
             $("#research").click();
           }}
           display={researchthumb != "" && "none"}
-          src={researchthumb || symbol}
+          src={researchthumb}
           onChangeImg={(e) => {
             const file = e.target.files[0];
             if (file) {
@@ -352,7 +433,7 @@ export default function PostWritePage(props) {
             $("#goal").click();
           }}
           display={goalthumb != "" && "none"}
-          src={goalthumb || symbol1200}
+          src={goalthumb}
           onChangeImg={(e) => {
             const file = e.target.files[0];
             if (file) {
@@ -393,7 +474,7 @@ export default function PostWritePage(props) {
             $("#function01").click();
           }}
           display={function01thumb != "" && "none"}
-          src={function01thumb || symbol700}
+          src={function01thumb}
           onChangeImg={(e) => {
             const file = e.target.files[0];
             if (file) {
@@ -433,7 +514,7 @@ export default function PostWritePage(props) {
             $("#function02").click();
           }}
           display={function02thumb != "" && "none"}
-          src={function02thumb || symbol700}
+          src={function02thumb}
           onChangeImg={(e) => {
             const file = e.target.files[0];
             if (file) {
@@ -472,7 +553,7 @@ export default function PostWritePage(props) {
             $("#function03").click();
           }}
           display={function03thumb != "" && "none"}
-          src={function03thumb || symbol700}
+          src={function03thumb}
           onChangeImg={(e) => {
             const file = e.target.files[0];
             if (file) {
@@ -486,6 +567,45 @@ export default function PostWritePage(props) {
             }
           }}
         />
+        {/* <Left
+          size={"752X500"}
+          imgwidth={752}
+          imgheight={500}
+          file={"function03"}
+          head={"Function03"}
+          width={373}
+          onChange={(e) => {
+            const { value } = e.target;
+            ContentChange(2, value); // 첫 번째 func 요소에 content 업데이트
+
+            const length = e.target.value.length;
+            setFunc03text(length);
+            if (length >= 525) {
+              e.target.value = e.target.value.substring(0, 525);
+              alert("글자초과됨");
+            }
+          }}
+          text={func03text}
+          value={func[2].content}
+          onClickImg={(e) => {
+            // file클릭 이벤트 추가
+            $("#function03").click();
+          }}
+          display={function03thumb != "" && "none"}
+          src={function03thumb}
+          onChangeImg={(e) => {
+            const file = e.target.files[0];
+            if (file) {
+              setFunction03img(file);
+              const reader = new FileReader();
+              reader.onload = (e) => {
+                const id = new Date().getTime().toString();
+                setFunction03thumb(e.target.result);
+              };
+              reader.readAsDataURL(file);
+            }
+          }}
+        /> */}
       </div>
 
       <div className={styles.btnContainer}>
