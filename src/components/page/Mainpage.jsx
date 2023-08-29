@@ -25,7 +25,11 @@ export default function Mainpage() {
 
   return (
     <div className={styles.Page_Wrapper}>
-      <Login></Login>
+      <Login
+        onClick={(e) => {
+          nav("/write");
+        }}
+      ></Login>
     </div>
   );
 }

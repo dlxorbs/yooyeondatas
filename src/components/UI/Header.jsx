@@ -10,7 +10,12 @@ export default function Header() {
   return (
     <div className={styles.Header}>
       <div className={styles.Header_Container}>
-        <div className={styles.Header_LOGO}>
+        <div
+          className={styles.Header_LOGO}
+          onClick={(e) => {
+            nav("/");
+          }}
+        >
           <img src={logo} alt="" />{" "}
         </div>
       </div>
