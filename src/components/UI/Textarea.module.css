@@ -30,7 +30,7 @@
 }
 
 textarea::-webkit-input-placeholder {
-  color: #33333340;
+  color: var(--placeholdercolor);
   font-weight: 700;
   font-family: "Pretendard-Regular";
 }

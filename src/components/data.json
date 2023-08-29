@@ -1,7 +1,7 @@
 [
   {
-    "id": "학생이름",
-    "studentinfo": "학번",
+    "studentid": [],
+    "id": [],
     "major": "전공",
     "main": {
       "works": "작품제목",

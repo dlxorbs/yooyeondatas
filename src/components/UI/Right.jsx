@@ -15,6 +15,7 @@ export default function Right(props) {
         src={props.src}
         onChange={props.onChangeImg}
         display={props.display}
+        placeholdercolor={"#66666680"}
       />
       <div className="text">
         <h4
@@ -36,6 +37,7 @@ export default function Right(props) {
           text={props.text}
           maxlength={props.maxlength}
           limit={"525자"}
+          placeholdercolor={"#66666680"}
         />
       </div>
     </div>

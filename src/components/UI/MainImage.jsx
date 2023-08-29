@@ -54,6 +54,7 @@ export default function MainImg(props) {
           color={"#FFFFFF"}
           limit={"230자"}
           overflow={"hidden"}
+          placeholdercolor={"#FFFFFF60"}
         />
 
         <TextInput
@@ -69,6 +70,7 @@ export default function MainImg(props) {
           text={props.textOneline}
           limit={"230자"}
           overflow={"hidden"}
+          placeholdercolor={"#FFFFFF60"}
         />
       </div>
     </div>

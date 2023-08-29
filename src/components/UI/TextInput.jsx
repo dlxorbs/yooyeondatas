@@ -21,7 +21,8 @@ export default function TextInput(props) {
           "--lineheight": props.lineheight + "%",
           "--overflow": props.overflow,
           "--color": props.color || "#666666",
-          border: "1px solid #66666640",
+          // border: "1px solid #66666640",
+          "--placeholdercolor": props.placeholdercolor,
         }}
         maxlength={props.maxlength}
         height={props.height}

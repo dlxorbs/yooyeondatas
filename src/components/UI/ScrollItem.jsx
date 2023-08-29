@@ -12,6 +12,7 @@ export default function ScrollItem(props) {
       }}
       onClick={props.onClick}
     >
+      <div className={styles.over}></div>
       <span style={{ display: props.display, textAlign: "center" }}>
         {props.size}
         <br />
