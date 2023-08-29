@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Button from "../UI/Button";
+
 import CardList from "../list/CardList";
 import styles from "./Page.module.css";
 import Userprofile from "../list/Userprofile";
@@ -26,9 +26,6 @@ export default function Mainpage() {
   return (
     <div className={styles.Page_Wrapper}>
       <Login></Login>
-      <div className={styles.btnContainer}>
-        <Button title="글작성" onClick={function () {}}></Button>
-      </div>
     </div>
   );
 }
