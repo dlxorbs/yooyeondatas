@@ -13,7 +13,9 @@ import {
 import symbol from "../Img/symbol.png";
 import symbol700 from "../Img/700symbol.png";
 import symbol1200 from "../Img/1200symbol.png";
+import symbol1920 from "../Img/1920symbol.png";
 import { db, storage } from "../../firebase.js";
+import MainImg from "../UI/MainImage";
 import Right from "../UI/Right";
 import Left from "../UI/Left";
 import Center from "../UI/Center";
@@ -27,6 +29,9 @@ export default function PostWritePage(props) {
   const [thumb, setThumb] = useState("");
 
   // 이미지 적용시 파일들
+  const [mainimg, setMainimg] = useState("");
+  const [mainthumb, setMainthumb] = useState("");
+
   const [backimg, setBackimg] = useState("");
   const [backthumb, setbackthumb] = useState("");
 
@@ -46,6 +51,8 @@ export default function PostWritePage(props) {
   const [function03thumb, setFunction03thumb] = useState("");
 
   // 텍스트 길이 제한
+  const [maintext, setMaintext] = useState("");
+  const [onelinetext, setOnelinetext] = useState("");
   const [backtext, setBacktext] = useState("");
   const [restext, setRestext] = useState("");
   const [goaltext, setGoaltext] = useState("");
@@ -102,6 +109,12 @@ export default function PostWritePage(props) {
 
     // 백그라운드
     var storageRef = storage.ref();
+
+    // 백그라운드 이미지 업로드
+    const mainRef = storageRef.child(id + "/" + "main");
+    await mainRef.put(mainimg);
+    const mainUrl = await getDownloadURL(mainRef);
+
     // 백그라운드 이미지 업로드
     const backgroundRef = storageRef.child(id + "/" + "background");
     await backgroundRef.put(backimg);
@@ -117,7 +130,7 @@ export default function PostWritePage(props) {
     await goalRef.put(goalimg);
     const goalUrl = await getDownloadURL(goalRef);
 
-    // 골 이미지 업로드
+    // 기능 이미지 업로드
     const function01Ref = storageRef.child(id + "/" + "function01");
     await function01Ref.put(function01img);
     const function01Url = await getDownloadURL(function01Ref);
@@ -136,7 +149,11 @@ export default function PostWritePage(props) {
         id: id,
         studentinfo: major,
         major: major,
-        main: main,
+        main: {
+          works: main.works,
+          img: mainUrl,
+          oneline: main.oneline,
+        },
         background: {
           img: backgroundUrl,
           content: background.content,
@@ -172,23 +189,59 @@ export default function PostWritePage(props) {
 
   return (
     <div className={styles.Page_Wrapper}>
+      <MainImg
+        size={"3:1 비율의"}
+        file={"main"}
+        onChangeTitle={(e) => {
+          setMain((prev) => ({
+            ...prev,
+            works: e.target.value,
+          }));
+          console.log(e.target.value.length);
+          const length = e.target.value.length;
+          setMaintext(length);
+          if (length >= 525) {
+            e.target.value = e.target.value.substring(0, 525);
+            alert("글자초과됨");
+          }
+        }}
+        onChangeinfo={(e) => {
+          setMain((prev) => ({
+            ...prev,
+            oneline: e.target.value,
+          }));
+          console.log(e.target.value.length);
+          const length = e.target.value.length;
+          setOnelinetext(length);
+          if (length >= 525) {
+            e.target.value = e.target.value.substring(0, 525);
+            alert("글자초과됨");
+          }
+        }}
+        textTitle={maintext}
+        valueTitle={main.works}
+        textOneline={onelinetext}
+        valueOneline={main.oneline}
+        onClick={(e) => {
+          // file클릭 이벤트 추가
+          $("#main").click();
+        }}
+        display={mainthumb != "" && "none"}
+        src={mainthumb || symbol1920}
+        onChangeImg={(e) => {
+          const file = e.target.files[0];
+          if (file) {
+            setMainimg(file);
+            const reader = new FileReader();
+            reader.onload = (e) => {
+              const id = new Date().getTime().toString();
+              setMainthumb(e.target.result);
+            };
+            reader.readAsDataURL(file);
+          }
+        }}
+      />
       <div className={styles.Page_SecondWrapper}>
-        <TextInput
-          height={44}
-          minheight={116}
-          fontsize={42}
-          fontweight={700}
-          placeholder={"작품제목을 입력해주세요."}
-          lineheight={100}
-          value={title}
-          margin="24px 0px 0px"
-          onChange={function (e) {
-            setTitle(e.target.value);
-            e.target.style.height = "auto";
-            e.target.style.height = e.target.scrollHeight + "px";
-          }}
-        />
-
         <Left
           size={"590X460"}
           imgwidth={590}
@@ -388,6 +441,46 @@ export default function PostWritePage(props) {
               const reader = new FileReader();
               reader.onload = (e) => {
                 setFunction02thumb(e.target.result);
+              };
+              reader.readAsDataURL(file);
+            }
+          }}
+        />
+        {/* 기능 03 */}
+        <Left
+          size={"752X500"}
+          imgwidth={752}
+          imgheight={500}
+          file={"function03"}
+          head={"Function03"}
+          width={373}
+          onChange={(e) => {
+            const { value } = e.target;
+            ContentChange(2, value); // 첫 번째 func 요소에 content 업데이트
+
+            const length = e.target.value.length;
+            setFunc03text(length);
+            if (length >= 525) {
+              e.target.value = e.target.value.substring(0, 525);
+              alert("글자초과됨");
+            }
+          }}
+          text={func03text}
+          value={func[2].content}
+          onClickImg={(e) => {
+            // file클릭 이벤트 추가
+            $("#function03").click();
+          }}
+          display={function03thumb != "" && "none"}
+          src={function03thumb || symbol700}
+          onChangeImg={(e) => {
+            const file = e.target.files[0];
+            if (file) {
+              setFunction03img(file);
+              const reader = new FileReader();
+              reader.onload = (e) => {
+                const id = new Date().getTime().toString();
+                setFunction03thumb(e.target.result);
               };
               reader.readAsDataURL(file);
             }

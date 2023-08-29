@@ -20,13 +20,22 @@ export default function TextInput(props) {
           "--fontweight": props.fontweight,
           "--lineheight": props.lineheight + "%",
           "--overflow": props.overflow,
+          "--color": props.color || "#666666",
+          border: "1px solid #66666640",
         }}
         maxlength={props.maxlength}
         height={props.height}
         value={props.value}
         onChange={props.onChange}
       ></textarea>
-      <span style={{ position: "absolute", bottom: "0px", right: "0px" }}>
+      <span
+        style={{
+          position: "absolute",
+          bottom: "12px",
+          right: "12px",
+          color: "#666666",
+        }}
+      >
         {props.text || 0}/{props.limit}
       </span>
     </div>

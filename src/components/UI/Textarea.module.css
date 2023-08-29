@@ -13,7 +13,6 @@
   width: 100%;
   min-height: var(--minheight);
   height: var(--height);
-  padding: 10px 0px 0px;
   margin: var(--margin);
   font-size: var(--fontsize);
   font-weight: var(--fontweight);
@@ -24,8 +23,8 @@
   overflow: var(--overflow);
   overflow-wrap: anywhere;
   border: none;
-
-  color: #666666;
+  color: var(--color);
+  border-radius: 12px;
   box-sizing: border-box;
   font-family: "Pretendard-Regular";
 }
