@@ -13,7 +13,8 @@ root.render(
     <Header></Header>
 
     <Routes>
-      <Route path="/" element={<PostWritePage />}></Route>
+      <Route index element={<Mainpage />}></Route>
+      <Route path="/write" element={<PostWritePage />}></Route>
     </Routes>
   </BrowserRouter>
 );

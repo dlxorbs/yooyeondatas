@@ -26,6 +26,7 @@ export default function Left(props) {
           text={props.text}
           maxlength={props.maxlength}
           limit={"525자"}
+          placeholdercolor={"#66666680"}
         />
       </div>
       <ScrollItem

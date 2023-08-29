@@ -1,4 +1,5 @@
 .scrollitem {
+  position: relative;
   width: var(--imgwidth);
   height: var(--imgheight);
   display: flex;
@@ -7,14 +8,28 @@
 
   align-items: center;
   gap: 12px;
-}
-.scrollitem:hover {
+
+  cursor: pointer;
 }
 
 .smimg {
   width: 100%;
   height: 100%;
   color: #666666;
+}
+
+.scrollitem:hover .over {
+  width: 100%;
+  height: 100%;
+  background-color: #66666660;
+  transition: 0.4s;
+}
+
+.over {
+  position: absolute;
+  border-radius: 12px;
+  width: 100%;
+  height: 100%;
 }
 
 .scrolllist > span {
