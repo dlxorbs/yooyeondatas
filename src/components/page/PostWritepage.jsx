@@ -29,7 +29,7 @@ export default function PostWritePage(props) {
   const [id, setID] = useState("2018194031");
   const [content, setContent] = useState("");
 
-  const [thumb, setThumb] = useState("");
+  const [dummy, setDummy] = useState({});
 
   // 이미지 적용시 파일들
   const [mainimg, setMainimg] = useState("");
@@ -54,6 +54,17 @@ export default function PostWritePage(props) {
   const [function03thumb, setFunction03thumb] = useState(symbol700);
 
   // 텍스트 길이 제한
+  const [maintextlength, setMaintextlength] = useState("");
+  const [onelinetextlength, setOnelinetextlength] = useState("");
+  const [backtextlength, setBacktextlength] = useState("");
+  const [restextlength, setRestextlength] = useState("");
+  const [goaltextlength, setGoaltextlength] = useState("");
+  const [func01textlength, setFunc01textlength] = useState("");
+  const [func02textlength, setFunc02textlength] = useState("");
+  const [func03textlength, setFunc03textlength] = useState("");
+
+  // 길이제한에 쓰는 데이터를 넣어서 이상하게 나오는중
+
   const [maintext, setMaintext] = useState("");
   const [onelinetext, setOnelinetext] = useState("");
   const [backtext, setBacktext] = useState("");
@@ -139,7 +150,28 @@ export default function PostWritePage(props) {
               ? Datas.func[2].img
               : symbol700
           );
+          setMaintext(Datas.main?.content || "");
+          setBacktext(Datas.background?.content || "");
+          setRestext(Datas.research?.content || "");
+          setGoaltext(Datas.goals?.content || "");
+          setFunc01text(
+            Datas.func && Datas.func[0] && Datas.func[0].img
+              ? Datas.func[0].content
+              : ""
+          );
+          setFunc02text(
+            Datas.func && Datas.func[1] && Datas.func[1].content
+              ? Datas.func[1].content
+              : ""
+          );
+          setFunc03text(
+            Datas.func && Datas.func[2] && Datas.func[2].content
+              ? Datas.func[2].content
+              : ""
+          );
         }
+        setDummy(Datas);
+        console.log(dummy);
       });
   }, []);
 
@@ -150,6 +182,16 @@ export default function PostWritePage(props) {
       return updatedFunc;
     });
   };
+
+  function getImageUrl(target, value) {
+    if (target !== undefined) {
+      return target;
+    } else if (dummy.func && dummy.func[value] && dummy.func[value].img) {
+      return dummy.func[value].img;
+    } else {
+      return "";
+    }
+  }
 
   const done = async function () {
     //이미지 파이어 스토리지로 넘기기
@@ -217,32 +259,45 @@ export default function PostWritePage(props) {
     const updatedData = {
       main: {
         works: main.works,
-        img: mainUrl !== undefined ? mainUrl : "",
+        img: mainUrl !== undefined ? mainUrl : dummy.main?.img || "",
         oneline: main.oneline,
       },
       background: {
-        img: backgroundUrl !== undefined ? backgroundUrl : "", // 유효한 URL이 없을 경우에는 빈 문자열로 설정
+        img:
+          backgroundUrl !== undefined
+            ? backgroundUrl
+            : dummy.background?.img || "", // 유효한 URL이 없을 경우에는 빈 문자열로 설정
         content: background.content,
       },
       research: {
-        img: researchUrl !== undefined ? researchUrl : "",
+        img:
+          researchUrl !== undefined ? researchUrl : dummy.research?.img || "",
         content: research.content,
       },
       goals: {
-        img: goalUrl !== undefined ? goalUrl : "",
+        img: goalUrl !== undefined ? goalUrl : dummy.goals?.img || "",
         content: goal.content,
       },
       func: [
         {
-          img: function01Url !== undefined ? function01Url : "",
+          img:
+            function01Url !== undefined
+              ? function01Url
+              : getImageUrl(function01Url, 0),
           content: func[0].content,
         },
         {
-          img: function02Url !== undefined ? function02Url : "",
+          img:
+            function02Url !== undefined
+              ? function02Url
+              : getImageUrl(function02Url, 1),
           content: func[1].content,
         },
         {
-          img: function03Url !== undefined ? function03Url : "",
+          img:
+            function03Url !== undefined
+              ? function03Url
+              : getImageUrl(function03Url, 2),
           content: func[2].content,
         },
       ],
@@ -251,9 +306,11 @@ export default function PostWritePage(props) {
     console.log(updatedData);
 
     if (docId.exists) {
+      const updateObj = { ...dummy, ...updatedData };
+      console.log(updateObj);
       db.collection("post")
         .doc(data.studentid + "_" + data.type)
-        .update(updatedData)
+        .update(updateObj)
         .then(() => {
           nav("/");
         });
@@ -267,6 +324,8 @@ export default function PostWritePage(props) {
     }
   };
 
+  // 완료하고 기존에 이미지가 있다면 확인 눌렀을때 기존의 링크가 들어가야되는데 초기화됨
+
   return (
     <div className={styles.Page_Wrapper}>
       <MainImg
@@ -279,7 +338,7 @@ export default function PostWritePage(props) {
           }));
           console.log(e.target.value.length);
           const length = e.target.value.length;
-          setMaintext(length);
+          setMaintextlength(length);
           if (length >= 525) {
             e.target.value = e.target.value.substring(0, 525);
             alert("글자초과됨");
@@ -335,16 +394,17 @@ export default function PostWritePage(props) {
               ...prev,
               content: e.target.value,
             }));
+            setBacktext(e.target.value);
             console.log(e.target.value.length);
             const length = e.target.value.length;
-            setBacktext(length);
+            setBacktextlength(length);
             if (length >= 525) {
               e.target.value = e.target.value.substring(0, 525);
               alert("글자초과됨");
             }
           }}
-          text={backtext}
-          value={background.content}
+          text={backtextlength}
+          value={backtext}
           onClickImg={(e) => {
             // file클릭 이벤트 추가
             $("#background").click();
@@ -377,15 +437,16 @@ export default function PostWritePage(props) {
               ...prev,
               content: e.target.value,
             }));
+            setRestext(e.target.value);
             const length = e.target.value.length;
-            setRestext(length);
+            setRestextlength(length);
             if (length >= 525) {
               alert("글자초과됨");
               e.target.value = e.target.value.substring(0, 525);
             }
           }}
-          text={restext}
-          value={research.content}
+          text={restextlength}
+          value={restext}
           onClickImg={(e) => {
             // file클릭 이벤트 추가
             $("#research").click();
@@ -413,21 +474,21 @@ export default function PostWritePage(props) {
           file={"goal"}
           head={"Goal"}
           width={550}
-          text={goaltext}
+          text={goaltextlength}
           onChange={(e) => {
             setGoal((prev) => ({
               ...prev,
               content: e.target.value,
             }));
-
+            setGoaltext(e.target.value);
             const length = e.target.value.length;
-            setGoaltext(length);
+            setGoaltextlength(length);
             if (length >= 230) {
               alert("글자초과됨");
               e.target.value = e.target.value.substring(0, 230);
             }
           }}
-          value={goal.content}
+          value={goaltext}
           onClickImg={(e) => {
             // file클릭 이벤트 추가
             $("#goal").click();
@@ -459,16 +520,16 @@ export default function PostWritePage(props) {
           onChange={(e) => {
             const { value } = e.target;
             ContentChange(0, value); // 첫 번째 func 요소에 content 업데이트
-
+            setFunc01text(e.target.value);
             const length = e.target.value.length;
-            setFunc01text(length);
+            setFunc01textlength(length);
             if (length >= 525) {
               e.target.value = e.target.value.substring(0, 525);
               alert("글자초과됨");
             }
           }}
-          text={func01text}
-          value={func[0].content}
+          text={func01textlength}
+          value={func01text}
           onClickImg={(e) => {
             // file클릭 이벤트 추가
             $("#function01").click();
@@ -499,16 +560,16 @@ export default function PostWritePage(props) {
           onChange={(e) => {
             const { value } = e.target;
             ContentChange(1, value); // 첫 번째 func 요소에 content 업데이트
-
+            setFunc02text(e.target.value);
             const length = e.target.value.length;
-            setFunc02text(length);
+            setFunc02textlength(length);
             if (length >= 525) {
               e.target.value = e.target.value.substring(0, 525);
               alert("글자초과됨");
             }
           }}
-          text={func02text}
-          value={func[1].content}
+          text={func02textlength}
+          value={func02text}
           onClickImg={(e) => {
             // file클릭 이벤트 추가
             $("#function02").click();
@@ -538,16 +599,16 @@ export default function PostWritePage(props) {
           onChange={(e) => {
             const { value } = e.target;
             ContentChange(2, value); // 첫 번째 func 요소에 content 업데이트
-
+            setFunc03text(e.target.value);
             const length = e.target.value.length;
-            setFunc03text(length);
+            setFunc03textlength(length);
             if (length >= 525) {
               e.target.value = e.target.value.substring(0, 525);
               alert("글자초과됨");
             }
           }}
-          text={func03text}
-          value={func[2].content}
+          text={func03textlength}
+          value={func03text}
           onClickImg={(e) => {
             // file클릭 이벤트 추가
             $("#function03").click();
@@ -579,13 +640,13 @@ export default function PostWritePage(props) {
             ContentChange(2, value); // 첫 번째 func 요소에 content 업데이트
 
             const length = e.target.value.length;
-            setFunc03text(length);
+            setFunc03textlength(length);
             if (length >= 525) {
               e.target.value = e.target.value.substring(0, 525);
               alert("글자초과됨");
             }
           }}
-          text={func03text}
+          text={func03textlength}
           value={func[2].content}
           onClickImg={(e) => {
             // file클릭 이벤트 추가
