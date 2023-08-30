@@ -118,8 +118,8 @@ export default function PostWritePage(props) {
     function03Url;
 
   useEffect(() => {
-    console.log(function03Url);
-  }, [function03Url]);
+    console.log(onelinetext);
+  }, [onelinetext]);
 
   // 작성했던 데이터 불러오기
   useEffect(function () {
@@ -131,7 +131,8 @@ export default function PostWritePage(props) {
       .then((doc) => {
         if (doc.exists) {
           Datas = doc.data();
-          setMainthumb(Datas.main?.img || symbol1920); // Datas.mainImg는 받아온 데이터의 필드명에 따라 수정해야 합니다.
+          // 썸네잉ㄹ
+          setMainthumb(Datas.main?.img || symbol1920);
           setbackthumb(Datas.background?.img || symbol);
           setResearchthumb(Datas.research?.img || symbol);
           setGoalthumb(Datas.goals?.img || symbol1200);
@@ -150,12 +151,15 @@ export default function PostWritePage(props) {
               ? Datas.func[2].img
               : symbol700
           );
-          setMaintext(Datas.main?.content || "");
+          // 텍스트
+          setMaintext(Datas.main?.works || "");
+          setOnelinetext(Datas.main?.oneline || "");
           setBacktext(Datas.background?.content || "");
           setRestext(Datas.research?.content || "");
           setGoaltext(Datas.goals?.content || "");
+
           setFunc01text(
-            Datas.func && Datas.func[0] && Datas.func[0].img
+            Datas.func && Datas.func[0] && Datas.func[0].content
               ? Datas.func[0].content
               : ""
           );
@@ -258,25 +262,25 @@ export default function PostWritePage(props) {
 
     const updatedData = {
       main: {
-        works: main.works,
+        works: maintext,
         img: mainUrl !== undefined ? mainUrl : dummy.main?.img || "",
-        oneline: main.oneline,
+        oneline: onelinetext,
       },
       background: {
         img:
           backgroundUrl !== undefined
             ? backgroundUrl
             : dummy.background?.img || "", // 유효한 URL이 없을 경우에는 빈 문자열로 설정
-        content: background.content,
+        content: backtext,
       },
       research: {
         img:
           researchUrl !== undefined ? researchUrl : dummy.research?.img || "",
-        content: research.content,
+        content: restext,
       },
       goals: {
         img: goalUrl !== undefined ? goalUrl : dummy.goals?.img || "",
-        content: goal.content,
+        content: goaltext,
       },
       func: [
         {
@@ -284,35 +288,37 @@ export default function PostWritePage(props) {
             function01Url !== undefined
               ? function01Url
               : getImageUrl(function01Url, 0),
-          content: func[0].content,
+          content: func01text,
         },
         {
           img:
             function02Url !== undefined
               ? function02Url
               : getImageUrl(function02Url, 1),
-          content: func[1].content,
+          content: func02text,
         },
         {
           img:
             function03Url !== undefined
               ? function03Url
               : getImageUrl(function03Url, 2),
-          content: func[2].content,
+          content: func03text,
         },
       ],
       video: "비디오 주소",
     };
-    console.log(updatedData);
 
     if (docId.exists) {
       const updateObj = { ...dummy, ...updatedData };
       console.log(updateObj);
+
+      console.log(done);
       db.collection("post")
         .doc(data.studentid + "_" + data.type)
         .update(updateObj)
         .then(() => {
           nav("/");
+          console.log(func03text);
         });
     } else {
       db.collection("post")
@@ -331,11 +337,16 @@ export default function PostWritePage(props) {
       <MainImg
         size={"3:1 비율의"}
         file={"main"}
+        textTitle={maintextlength}
+        textOneline={onelinetextlength}
+        valueTitle={maintext}
+        valueOneline={onelinetext}
         onChangeTitle={(e) => {
           setMain((prev) => ({
             ...prev,
             works: e.target.value,
           }));
+          setMaintext(e.target.value);
           console.log(e.target.value.length);
           const length = e.target.value.length;
           setMaintextlength(length);
@@ -345,22 +356,19 @@ export default function PostWritePage(props) {
           }
         }}
         onChangeinfo={(e) => {
-          setMain((prev) => ({
+          setOnelinetext((prev) => ({
             ...prev,
             oneline: e.target.value,
           }));
+          setOnelinetext(e.target.value);
           console.log(e.target.value.length);
           const length = e.target.value.length;
-          setOnelinetext(length);
+          setOnelinetextlength(length);
           if (length >= 525) {
             e.target.value = e.target.value.substring(0, 525);
             alert("글자초과됨");
           }
         }}
-        textTitle={maintext}
-        valueTitle={main.works}
-        textOneline={onelinetext}
-        valueOneline={main.oneline}
         onClick={(e) => {
           // file클릭 이벤트 추가
           $("#main").click();
@@ -628,45 +636,6 @@ export default function PostWritePage(props) {
             }
           }}
         />
-        {/* <Left
-          size={"752X500"}
-          imgwidth={752}
-          imgheight={500}
-          file={"function03"}
-          head={"Function03"}
-          width={373}
-          onChange={(e) => {
-            const { value } = e.target;
-            ContentChange(2, value); // 첫 번째 func 요소에 content 업데이트
-
-            const length = e.target.value.length;
-            setFunc03textlength(length);
-            if (length >= 525) {
-              e.target.value = e.target.value.substring(0, 525);
-              alert("글자초과됨");
-            }
-          }}
-          text={func03textlength}
-          value={func[2].content}
-          onClickImg={(e) => {
-            // file클릭 이벤트 추가
-            $("#function03").click();
-          }}
-          display={function03thumb != "" && "none"}
-          src={function03thumb}
-          onChangeImg={(e) => {
-            const file = e.target.files[0];
-            if (file) {
-              setFunction03img(file);
-              const reader = new FileReader();
-              reader.onload = (e) => {
-                const id = new Date().getTime().toString();
-                setFunction03thumb(e.target.result);
-              };
-              reader.readAsDataURL(file);
-            }
-          }}
-        /> */}
       </div>
 
       <div className={styles.btnContainer}>
