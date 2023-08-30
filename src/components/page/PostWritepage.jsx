@@ -118,8 +118,8 @@ export default function PostWritePage(props) {
     function03Url;
 
   useEffect(() => {
-    console.log(function03Url);
-  }, [function03Url]);
+    console.log(onelinetext);
+  }, [onelinetext]);
 
   // 작성했던 데이터 불러오기
   useEffect(function () {
@@ -152,7 +152,8 @@ export default function PostWritePage(props) {
               : symbol700
           );
           // 텍스트
-          setMaintext(Datas.main?.content || "");
+          setMaintext(Datas.main?.works || "");
+          setOnelinetext(Datas.main?.oneline || "");
           setBacktext(Datas.background?.content || "");
           setRestext(Datas.research?.content || "");
           setGoaltext(Datas.goals?.content || "");
@@ -261,9 +262,9 @@ export default function PostWritePage(props) {
 
     const updatedData = {
       main: {
-        works: main.works,
+        works: maintext,
         img: mainUrl !== undefined ? mainUrl : dummy.main?.img || "",
-        oneline: maintext,
+        oneline: onelinetext,
       },
       background: {
         img:
@@ -310,6 +311,8 @@ export default function PostWritePage(props) {
     if (docId.exists) {
       const updateObj = { ...dummy, ...updatedData };
       console.log(updateObj);
+
+      console.log(done);
       db.collection("post")
         .doc(data.studentid + "_" + data.type)
         .update(updateObj)
@@ -334,11 +337,16 @@ export default function PostWritePage(props) {
       <MainImg
         size={"3:1 비율의"}
         file={"main"}
+        textTitle={maintextlength}
+        textOneline={onelinetextlength}
+        valueTitle={maintext}
+        valueOneline={onelinetext}
         onChangeTitle={(e) => {
           setMain((prev) => ({
             ...prev,
             works: e.target.value,
           }));
+          setMaintext(e.target.value);
           console.log(e.target.value.length);
           const length = e.target.value.length;
           setMaintextlength(length);
@@ -348,22 +356,19 @@ export default function PostWritePage(props) {
           }
         }}
         onChangeinfo={(e) => {
-          setMain((prev) => ({
+          setOnelinetext((prev) => ({
             ...prev,
             oneline: e.target.value,
           }));
+          setOnelinetext(e.target.value);
           console.log(e.target.value.length);
           const length = e.target.value.length;
-          setOnelinetext(length);
+          setOnelinetextlength(length);
           if (length >= 525) {
             e.target.value = e.target.value.substring(0, 525);
             alert("글자초과됨");
           }
         }}
-        textTitle={maintext}
-        valueTitle={main.works}
-        textOneline={onelinetext}
-        valueOneline={main.oneline}
         onClick={(e) => {
           // file클릭 이벤트 추가
           $("#main").click();
