@@ -374,7 +374,7 @@ export default function PostWritePage(props) {
           $("#main").click();
           console.log(data);
         }}
-        display={mainthumb != "" && "none"}
+        display={mainthumb != symbol1920 && "none"}
         src={mainthumb}
         onChangeImg={(e) => {
           const file = e.target.files[0];
@@ -417,7 +417,7 @@ export default function PostWritePage(props) {
             // file클릭 이벤트 추가
             $("#background").click();
           }}
-          display={backthumb != "" && "none"}
+          display={backthumb != symbol && "none"}
           src={backthumb}
           onChangeImg={(e) => {
             const file = e.target.files[0];
@@ -459,7 +459,7 @@ export default function PostWritePage(props) {
             // file클릭 이벤트 추가
             $("#research").click();
           }}
-          display={researchthumb != "" && "none"}
+          display={researchthumb != symbol && "none"}
           src={researchthumb}
           onChangeImg={(e) => {
             const file = e.target.files[0];
@@ -501,7 +501,7 @@ export default function PostWritePage(props) {
             // file클릭 이벤트 추가
             $("#goal").click();
           }}
-          display={goalthumb != "" && "none"}
+          display={goalthumb != symbol1200 && "none"}
           src={goalthumb}
           onChangeImg={(e) => {
             const file = e.target.files[0];
@@ -542,7 +542,7 @@ export default function PostWritePage(props) {
             // file클릭 이벤트 추가
             $("#function01").click();
           }}
-          display={function01thumb != "" && "none"}
+          display={function01thumb != symbol700 && "none"}
           src={function01thumb}
           onChangeImg={(e) => {
             const file = e.target.files[0];
@@ -582,7 +582,7 @@ export default function PostWritePage(props) {
             // file클릭 이벤트 추가
             $("#function02").click();
           }}
-          display={function02thumb != "" && "none"}
+          display={function02thumb != symbol700 && "none"}
           src={function02thumb}
           onChangeImg={(e) => {
             const file = e.target.files[0];
@@ -621,7 +621,7 @@ export default function PostWritePage(props) {
             // file클릭 이벤트 추가
             $("#function03").click();
           }}
-          display={function03thumb != "" && "none"}
+          display={function03thumb != symbol700 && "none"}
           src={function03thumb}
           onChangeImg={(e) => {
             const file = e.target.files[0];

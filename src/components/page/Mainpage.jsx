@@ -5,6 +5,7 @@ import Button from "../UI/Button";
 import $ from "jquery";
 import { db, storage } from "../../firebase";
 import { useNavigate } from "react-router-dom";
+import symbol from "../Img/symbol.png";
 
 export default function Mainpage(props) {
   const nav = useNavigate();
@@ -16,12 +17,13 @@ export default function Mainpage(props) {
   const [studentinfo, setStundetInfo] = useState("");
   const [studentid, setStundetId] = useState("");
   const [major, setMajor] = useState("");
-
+  const [thumbnail, setThumbnail] = useState("");
   const data = {
     studentinfo: studentinfo,
     studentid: studentid,
     major: major,
     type: radioChecked,
+    img: thumbnail,
   };
   const next = async function () {
     const docId = await db
@@ -32,6 +34,17 @@ export default function Mainpage(props) {
     console.log(docId);
     if (docId.exists) {
       // 이미 해당 문서가 존재하는 경우 업데이트 로직을 추가
+      let Datas = {};
+      db.collection("post")
+        .doc(studentid + "_" + radioChecked)
+        .get()
+        .then((doc) => {
+          if (doc.exists) {
+            Datas = doc.data();
+            // 썸네잉ㄹ
+            setThumbnail(Datas.data?.img || symbol);
+          }
+        });
       db.collection("post")
         .doc(studentid + "_" + radioChecked)
         .update({
@@ -44,7 +57,7 @@ export default function Mainpage(props) {
             $(".studentid").val() != "" &&
             radioChecked
           ) {
-            nav("/write", {
+            nav("/thumb", {
               state: {
                 data: data,
               },
@@ -67,41 +80,48 @@ export default function Mainpage(props) {
           }
         });
     } else {
-      // 해당 문서가 없는 경우 새로운 문서를 생성
-      db.collection("post")
-        .doc(studentid + "_" + radioChecked)
-        .set({
-          data,
-        })
-        .then(() => {
-          if (
-            click != "전공을 선택해주세요" &&
-            $(".studentinfo").val() != "" &&
-            $(".studentid").val() != "" &&
-            radioChecked
-          ) {
-            nav("/write", {
-              state: {
-                data: data,
-              },
-            });
-            console.log($(".studentid").val());
-            console.log(radioChecked);
-          } else {
-            if (click == "전공을 선택해주세요") {
-              alert("전공을 선택해주세요");
+      if (
+        click != "전공을 선택해주세요" &&
+        $(".studentinfo").val() != "" &&
+        $(".studentid").val() != "" &&
+        radioChecked
+      ) {
+        // 해당 문서가 없는 경우 새로운 문서를 생성
+        db.collection("post")
+          .doc(studentid + "_" + radioChecked)
+          .set({
+            data,
+          })
+          .then(() => {
+            if (
+              click != "전공을 선택해주세요" &&
+              $(".studentinfo").val() != "" &&
+              $(".studentid").val() != "" &&
+              radioChecked
+            ) {
+              nav("/thumb", {
+                state: {
+                  data: data,
+                },
+              });
+              console.log($(".studentid").val());
+              console.log(radioChecked);
+            } else {
+              if (click == "전공을 선택해주세요") {
+                alert("전공을 선택해주세요");
+              }
+              if ($(".studentinfo").val() == "") {
+                alert("이름을 입력해주세요");
+              }
+              if ($(".studentid").val() == "") {
+                alert("학번을 입력해주세요");
+              }
+              if (radioChecked == false) {
+                alert("작품정보를 입력해주세요");
+              }
             }
-            if ($(".studentinfo").val() == "") {
-              alert("이름을 입력해주세요");
-            }
-            if ($(".studentid").val() == "") {
-              alert("학번을 입력해주세요");
-            }
-            if (radioChecked == false) {
-              alert("작품정보를 입력해주세요");
-            }
-          }
-        });
+          });
+      }
     }
   };
 
@@ -168,7 +188,7 @@ export default function Mainpage(props) {
                   value="산업디자인공학"
                   onClick={(e) => {
                     setClick("산업디자인공학");
-                    setMajor(e.target.value);
+                    setMajor("1");
                     setToggle(false);
                   }}
                 >
@@ -178,7 +198,7 @@ export default function Mainpage(props) {
                   value="미디어디자인공학"
                   onClick={(e) => {
                     setClick("미디어디자인공학");
-                    setMajor(e.target.value);
+                    setMajor("2");
                     setToggle(false);
                   }}
                 >
