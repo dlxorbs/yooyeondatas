@@ -18,7 +18,7 @@ export default function Thumbnailimg(props) {
   const nav = useNavigate();
   const location = useLocation();
   const [toggle, setToggle] = useState(false);
-  const [radioChecked, setRadioChecked] = useState(false);
+
   const [predata, setpreData] = useState(location.state?.data);
   const [thumb, setThumb] = useState("");
   const [Img, setImg] = useState("");
@@ -37,8 +37,9 @@ export default function Thumbnailimg(props) {
       .then((doc) => {
         if (doc.exists) {
           Datas = doc.data();
-          // 썸네잉ㄹ
-          setThumb(Datas.data?.img || symbol);
+          if (doc.data().data.img != "") {
+            setThumb(doc.data().data.img);
+          }
         }
         setDummy(Datas);
         console.log(dummy);
@@ -69,7 +70,7 @@ export default function Thumbnailimg(props) {
       studentid: predata.studentid,
       major: predata.major,
       type: predata.type,
-      img: thumbUrl !== undefined ? thumbUrl : dummy.data?.img || "",
+      img: url,
     };
 
     setpreData(data);
@@ -84,7 +85,13 @@ export default function Thumbnailimg(props) {
       db.collection("post")
         .doc(predata.studentid + "_" + predata.type)
         .update({
-          data,
+          data: {
+            studentinfo: predata.studentinfo,
+            studentid: predata.studentid,
+            major: predata.major,
+            type: predata.type,
+            img: predata.img,
+          },
         })
         .then(() => {
           if (thumb != "") {

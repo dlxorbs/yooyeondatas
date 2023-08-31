@@ -1,4 +1,4 @@
-import { React, useState } from "react";
+import { React, useEffect, useState } from "react";
 import styles from "./Page.module.css";
 import "../UI/Login.css";
 import Button from "../UI/Button";
@@ -18,6 +18,7 @@ export default function Mainpage(props) {
   const [studentid, setStundetId] = useState("");
   const [major, setMajor] = useState("");
   const [thumbnail, setThumbnail] = useState("");
+
   const data = {
     studentinfo: studentinfo,
     studentid: studentid,
@@ -25,6 +26,24 @@ export default function Mainpage(props) {
     type: radioChecked,
     img: thumbnail,
   };
+  useEffect(() => {
+    async function fetchData() {
+      const docId = await db
+        .collection("post")
+        .doc(studentid + "_" + radioChecked)
+        .get();
+
+      if (docId.exists) {
+        const docData = docId.data();
+        setThumbnail(docData.data.img);
+      } else {
+        setThumbnail(""); // 데이터가 없는 경우 빈 문자열로 설정
+      }
+    }
+
+    fetchData(); // 컴포넌트가 마운트될 때 데이터 확인
+  }, [studentid, radioChecked]);
+
   const next = async function () {
     const docId = await db
       .collection("post")
@@ -34,17 +53,7 @@ export default function Mainpage(props) {
     console.log(docId);
     if (docId.exists) {
       // 이미 해당 문서가 존재하는 경우 업데이트 로직을 추가
-      let Datas = {};
-      db.collection("post")
-        .doc(studentid + "_" + radioChecked)
-        .get()
-        .then((doc) => {
-          if (doc.exists) {
-            Datas = doc.data();
-            // 썸네잉ㄹ
-            setThumbnail(Datas.data?.img || symbol);
-          }
-        });
+
       db.collection("post")
         .doc(studentid + "_" + radioChecked)
         .update({

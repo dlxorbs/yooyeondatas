@@ -12,6 +12,10 @@
   gap: 24px;
 }
 
+.thumbnailcontainer {
+  width: calc(80% - 48px);
+  margin: auto;
+}
 .inputcontainer {
   width: calc(80% - 48px);
   display: flex;
