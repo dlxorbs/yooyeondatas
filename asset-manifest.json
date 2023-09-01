@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/yooyeondata/static/css/main.d5661809.css",
-    "main.js": "/yooyeondata/static/js/main.d467ea40.js",
+    "main.js": "/yooyeondata/static/js/main.ce3e6528.js",
     "static/js/787.d7fb2c60.chunk.js": "/yooyeondata/static/js/787.d7fb2c60.chunk.js",
     "static/media/1920symbol.png": "/yooyeondata/static/media/1920symbol.0c93e9f1ffca1ab24263.png",
     "static/media/700symbol.png": "/yooyeondata/static/media/700symbol.47abc0e5a8ed3943b36c.png",
@@ -11,11 +11,11 @@
     "static/media/logo.svg": "/yooyeondata/static/media/logo.979775ba4dad9a07a010da363c6188f8.svg",
     "index.html": "/yooyeondata/index.html",
     "main.d5661809.css.map": "/yooyeondata/static/css/main.d5661809.css.map",
-    "main.d467ea40.js.map": "/yooyeondata/static/js/main.d467ea40.js.map",
+    "main.ce3e6528.js.map": "/yooyeondata/static/js/main.ce3e6528.js.map",
     "787.d7fb2c60.chunk.js.map": "/yooyeondata/static/js/787.d7fb2c60.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.d5661809.css",
-    "static/js/main.d467ea40.js"
+    "static/js/main.ce3e6528.js"
   ]
 }
