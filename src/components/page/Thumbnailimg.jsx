@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import symbol from "../Img/symbol.png";
+import symbol from "../Img/symbol1_1.png";
 import { useNavigate, useLocation } from "react-router-dom";
 import styles from "./Page.module.css";
 import "../UI/Login.css";
@@ -22,47 +22,53 @@ export default function Thumbnailimg(props) {
   const [predata, setpreData] = useState(location.state?.data);
   const [thumb, setThumb] = useState("");
   const [Img, setImg] = useState("");
-  const [url, setUrl] = useState("");
+  const [url, setUrl] = useState(location.state?.data?.img);
   // 학생 데이터 변수 지정
   const [dummy, setDummy] = useState({});
 
   let thumbUrl;
 
-  //   이전데이터 불러오기
-  useEffect(function () {
-    let Datas = {};
+  // //   이전데이터 불러오기
+  // useEffect(function () {
+  //   let Datas = {};
+  //   db.collection("post")
+  //     .doc(predata.studentid + "_" + predata.type)
+  //     .get()
+  //     .then((doc) => {
+  //       if (doc.exists) {
+  //         Datas = doc.data();
+  //         if (doc.data().data.img != "") {
+  //           setThumb(doc.data().data.img);
+  //         }
+  //       }
+  //       setDummy(Datas);
+  //       console.log(dummy);
+  //     });
+  // }, []);
+  // 작성 처음일 경우 기본이미지
+
+  useEffect(() => {
     db.collection("post")
       .doc(predata.studentid + "_" + predata.type)
       .get()
       .then((doc) => {
         if (doc.exists) {
-          Datas = doc.data();
-          if (doc.data().data.img != "") {
-            setThumb(doc.data().data.img);
-          }
+          setThumb(doc.data().data?.img || symbol);
         }
-        setDummy(Datas);
-        console.log(dummy);
+        console.log(predata);
       });
   }, []);
-  // 작성 처음일 경우 기본이미지
-
-  useEffect(() => {
-    console.log(predata, thumbUrl);
-  }, [predata]);
 
   const next = async function () {
     // 백그라운드
     var storageRef = storage.ref();
     // 썸네일 이미지 저장하기
-
     if (Img) {
       const thumbRef = storageRef.child(
         predata.studentid + "_" + predata.type + "/" + "thumb"
       );
       await thumbRef.put(Img);
       thumbUrl = await getDownloadURL(thumbRef);
-      setUrl(thumbUrl);
     }
 
     const data = {
@@ -70,11 +76,11 @@ export default function Thumbnailimg(props) {
       studentid: predata.studentid,
       major: predata.major,
       type: predata.type,
-      img: url,
+      img: thumbUrl == undefined ? predata?.img : thumbUrl,
     };
 
     setpreData(data);
-
+    console.log(data);
     const docId = await db
       .collection("post")
       .doc(predata.studentid + "_" + predata.type)
@@ -85,19 +91,14 @@ export default function Thumbnailimg(props) {
       db.collection("post")
         .doc(predata.studentid + "_" + predata.type)
         .update({
-          data: {
-            studentinfo: predata.studentinfo,
-            studentid: predata.studentid,
-            major: predata.major,
-            type: predata.type,
-            img: predata.img,
-          },
+          data,
         })
         .then(() => {
+          console.log(data);
           if (thumb != "") {
             nav("/write", {
               state: {
-                data: data,
+                data,
               },
             });
           }

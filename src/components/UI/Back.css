@@ -45,6 +45,7 @@ h4 {
   width: 1200px;
   margin: auto;
   position: absolute;
+  bottom: 56px;
 }
 
 .thumbnail {
