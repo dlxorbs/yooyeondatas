@@ -478,7 +478,7 @@ export default function PostWritePage(props) {
           imgwidth={1200}
           imgheight={460}
           file={"goal"}
-          head={"Goal"}
+          head={"Project Goal"}
           width={550}
           text={goaltextlength}
           onChange={(e) => {
@@ -521,7 +521,7 @@ export default function PostWritePage(props) {
           imgwidth={752}
           imgheight={500}
           file={"function01"}
-          head={"Function01"}
+          head={"Function 01"}
           width={373}
           onChange={(e) => {
             const { value } = e.target;
@@ -561,7 +561,7 @@ export default function PostWritePage(props) {
           imgwidth={752}
           imgheight={500}
           file={"function02"}
-          head={"Function02"}
+          head={"Function 02"}
           width={373}
           onChange={(e) => {
             const { value } = e.target;
@@ -600,7 +600,7 @@ export default function PostWritePage(props) {
           imgwidth={752}
           imgheight={500}
           file={"function03"}
-          head={"Function03"}
+          head={"Function 03"}
           width={373}
           onChange={(e) => {
             const { value } = e.target;

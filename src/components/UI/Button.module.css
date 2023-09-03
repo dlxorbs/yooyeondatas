@@ -1,6 +1,6 @@
 .borderedButton {
   padding: 8px 20px;
-  font-size: 16px;
+  font-size: 14px;
   border-radius: 8px;
   width: calc(80% - 48px);
   cursor: pointer;
@@ -9,7 +9,7 @@
   font-weight: 500;
   background-color: #3775bb;
   margin: var(--margin);
-
+  padding: 12px 0px;
   transition: 0.2s;
 }
 

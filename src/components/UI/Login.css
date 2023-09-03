@@ -12,6 +12,25 @@
   gap: 24px;
 }
 
+/* 개인작 컨테이너 */
+
+.solocontainer {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.teamcontainer {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+}
+
 .thumbnailcontainer {
   width: calc(80% - 48px);
   margin: auto;
@@ -163,4 +182,51 @@ input[type="radio"]:checked + label {
 }
 input[type="radio"]:checked + label > div {
   color: #fff;
+}
+
+.teammaster {
+  width: 80%;
+
+  display: flex;
+  gap: 8px;
+  flex-direction: column;
+  align-items: center;
+}
+
+.teammaster:nth-child(1) {
+  width: 100%;
+}
+
+.coopbox {
+  width: 100%;
+  display: flex;
+  gap: 20px;
+}
+
+.borderedButton {
+  padding: 8px 20px;
+  font-size: 14px;
+  border-radius: 8px;
+  width: auto;
+  cursor: pointer;
+  border: none;
+  color: #fff;
+  font-weight: 500;
+  background-color: #6ea8eb;
+  margin: var(--margin);
+  padding: 12px 0px;
+  transition: 0.2s;
+}
+
+.add {
+  width: calc(80% - 48px);
+}
+
+.borderedButton:hover {
+  background-color: #7698bf;
+  margin: var(--margin);
+}
+
+.borderedButton:active {
+  background-color: #5a7595;
 }

@@ -5,19 +5,28 @@ import Button from "../UI/Button";
 import $ from "jquery";
 import { db, storage } from "../../firebase";
 import { useNavigate } from "react-router-dom";
+
+import Team from "../UI/Team";
 import symbol from "../Img/symbol.png";
+import symbol1 from "../Img/symbol1_1.png";
 
 export default function Mainpage(props) {
   const nav = useNavigate();
   const [toggle, setToggle] = useState(false);
-  const [radioChecked, setRadioChecked] = useState(false);
+  const [radioChecked, setRadioChecked] = useState("s");
 
   const [click, setClick] = useState("전공을 선택해주세요");
+
   // 학생 데이터 변수 지정
-  const [studentinfo, setStundetInfo] = useState("");
-  const [studentid, setStundetId] = useState("");
+  const [studentinfo, setStudentInfo] = useState([]);
+  const [studentid, setStudentId] = useState("");
   const [major, setMajor] = useState("");
   const [thumbnail, setThumbnail] = useState("");
+
+  // 팀원 정보
+  const [teamMembers, setTeamMembers] = useState([
+    { studentId: "", studentInfo: "", major: "1", toggle: false },
+  ]);
 
   const data = {
     studentinfo: studentinfo,
@@ -26,6 +35,7 @@ export default function Mainpage(props) {
     type: radioChecked,
     img: thumbnail,
   };
+
   useEffect(() => {
     async function fetchData() {
       const docId = await db
@@ -35,7 +45,7 @@ export default function Mainpage(props) {
 
       if (docId.exists) {
         const docData = docId.data();
-        setThumbnail(docData.data?.img || symbol);
+        setThumbnail(docData.data?.img || "");
       } else {
         setThumbnail(""); // 데이터가 없는 경우 빈 문자열로 설정
       }
@@ -43,6 +53,39 @@ export default function Mainpage(props) {
 
     fetchData(); // 컴포넌트가 마운트될 때 데이터 확인
   }, [studentid, radioChecked]);
+
+  const addTeamMember = () => {
+    if (teamMembers.length < 4) {
+      setTeamMembers([
+        ...teamMembers,
+        { studentId: "", studentInfo: "", major: "", toggle: false },
+      ]);
+    }
+  };
+
+  const removeTeamMember = (indexToRemove) => {
+    const updatedMembers = teamMembers.filter(
+      (_, index) => index !== indexToRemove
+    );
+    setTeamMembers(updatedMembers);
+  };
+
+  const TeamMemberChange = (index, field, value) => {
+    const updatedMembers = [...teamMembers];
+    updatedMembers[index][field] = value;
+    setTeamMembers(updatedMembers);
+  };
+  const selectMajor = (index, majorValue) => {
+    const updatedMembers = [...teamMembers];
+    updatedMembers[index].major = majorValue;
+    setTeamMembers(updatedMembers);
+  };
+
+  const toggleMajor = (index) => {
+    const updatedMembers = [...teamMembers];
+    updatedMembers[index].toggle = !updatedMembers[index].toggle;
+    setTeamMembers(updatedMembers);
+  };
 
   const next = async function () {
     const docId = await db
@@ -114,6 +157,7 @@ export default function Mainpage(props) {
             })
             .then(() => {
               if (
+                radioChecked === "s" &&
                 click != "전공을 선택해주세요" &&
                 $(".studentinfo").val() != "" &&
                 $(".studentid").val() != "" &&
@@ -147,7 +191,7 @@ export default function Mainpage(props) {
             });
         }
       }
-    } else {
+    } else if (radioChecked === "s") {
       if (click == "전공을 선택해주세요") {
         alert("전공을 선택해주세요");
       }
@@ -170,7 +214,7 @@ export default function Mainpage(props) {
     <div className={styles.Page_Wrapper}>
       <div className="LoginContainer">
         <h1> 제18대 온라인 졸업전시 정보 입력 </h1>
-        <form className="inputcontainer" onSubmit={(e) => {}}>
+        <form className="inputcontainer">
           <div className="radio">
             <input
               id="s"
@@ -196,65 +240,153 @@ export default function Mainpage(props) {
               <div className="radiobtn"> 팀작</div>
             </label>
           </div>
-          <input
-            className="studentid"
-            type="number"
-            placeholder=" 학번을 입력해주세요"
-            onChange={(e) => {
-              setStundetId(e.target.value);
-            }}
-          />
-          <input
-            className="studentinfo"
-            type="text"
-            placeholder="이름을 입력해주세요"
-            onChange={(e) => {
-              setStundetInfo(e.target.value);
-            }}
-          />
-          <ul>
-            <button
-              className={`major ${toggle ? "open" : ""}`}
-              type="button"
-              onClick={(e) => {
-                setToggle(!toggle);
-                console.log(toggle);
-              }}
-            >
-              {click}
-            </button>
-            {toggle ? (
-              <div className="majorcontainer">
-                <li
-                  value="산업디자인공학"
+          {/* 체크된 상태에 따라 다른게 보여지게... */}
+          {radioChecked == "s" ? (
+            <div className="solocontainer">
+              <input
+                className="studentid"
+                type="number"
+                placeholder=" 학번을 입력해주세요"
+                onChange={(e) => {
+                  setStudentId(e.target.value);
+                }}
+              />
+              <input
+                className="studentinfo"
+                type="text"
+                placeholder="이름을 입력해주세요"
+                onChange={(e) => {
+                  setStudentInfo([e.target.value]);
+                }}
+              />
+              <ul>
+                <button
+                  className={`major ${toggle ? "open" : ""}`}
+                  type="button"
                   onClick={(e) => {
-                    setClick("산업디자인공학");
-                    setMajor("1");
-                    setToggle(false);
+                    setToggle(!toggle);
+                    console.log(toggle);
                   }}
                 >
-                  산업디자인공학
-                </li>
-                <li
-                  value="미디어디자인공학"
-                  onClick={(e) => {
-                    setClick("미디어디자인공학");
-                    setMajor("2");
-                    setToggle(false);
-                  }}
-                >
-                  미디어디자인공학
-                </li>
-              </div>
-            ) : (
-              ""
-            )}
-          </ul>
+                  {click}
+                </button>
+                {toggle ? (
+                  <div className="majorcontainer">
+                    <li
+                      value="산업디자인공학"
+                      onClick={(e) => {
+                        setClick("산업디자인공학");
+                        setMajor("1");
+                        setToggle(false);
+                      }}
+                    >
+                      산업디자인공학
+                    </li>
+                    <li
+                      value="미디어디자인공학"
+                      onClick={(e) => {
+                        setClick("미디어디자인공학");
+                        setMajor("2");
+                        setToggle(false);
+                      }}
+                    >
+                      미디어디자인공학
+                    </li>
+                  </div>
+                ) : (
+                  ""
+                )}
+              </ul>
+            </div>
+          ) : (
+            <div className="teamcontainer">
+              {teamMembers.map((member, index) => (
+                <div className="coopbox" key={index}>
+                  <div className="teammaster">
+                    <input
+                      className="studentid"
+                      type="number"
+                      placeholder={`  학번을 입력하세요`}
+                      value={member.studentId}
+                      onChange={(e) =>
+                        TeamMemberChange(index, "studentId", e.target.value)
+                      }
+                    />
+                    <input
+                      className="studentinfo"
+                      type="text"
+                      placeholder={`  이름을 입력하세요`}
+                      value={member.studentInfo}
+                      onChange={(e) =>
+                        TeamMemberChange(index, "studentInfo", e.target.value)
+                      }
+                    />
+                    <ul>
+                      <button
+                        className={`major ${member.toggle ? "open" : ""}`}
+                        type="button"
+                        onClick={() => {
+                          toggleMajor(index);
+                        }}
+                      >
+                        {member.major === "1"
+                          ? "산업디자인공학"
+                          : "미디어디자인공학"}
+                      </button>
+                      {member.toggle ? (
+                        <div className="majorcontainer">
+                          <li
+                            value="산업디자인공학"
+                            onClick={(e) => {
+                              TeamMemberChange(index, "major", "1");
+                              setClick("산업디자인공학");
+                              toggleMajor(index);
+                            }}
+                          >
+                            산업디자인공학
+                          </li>
+                          <li
+                            value="미디어디자인공학"
+                            onClick={(e) => {
+                              TeamMemberChange(index, "major", "2");
+                              setClick("미디어디자인공학");
+                              toggleMajor(index);
+                            }}
+                          >
+                            미디어디자인공학
+                          </li>
+                        </div>
+                      ) : (
+                        ""
+                      )}
+                    </ul>
+                  </div>
+                  {index > 0 && (
+                    <button
+                      className="borderedButton"
+                      type="button"
+                      onClick={() => removeTeamMember(index)}
+                    >
+                      팀원 삭제
+                    </button>
+                  )}
+                </div>
+              ))}
+              <button
+                className="add borderedButton"
+                type="button"
+                onClick={addTeamMember}
+              >
+                팀원 추가하기
+              </button>
+            </div>
+          )}
         </form>
         <Button
           title="글작성"
           onClick={(e) => {
             next();
+            console.log(teamMembers);
           }}
         ></Button>
       </div>
