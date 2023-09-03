@@ -63,8 +63,6 @@ export default function PostWritePage(props) {
   const [func02textlength, setFunc02textlength] = useState("");
   const [func03textlength, setFunc03textlength] = useState("");
 
-  // 길이제한에 쓰는 데이터를 넣어서 이상하게 나오는중
-
   const [maintext, setMaintext] = useState("");
   const [onelinetext, setOnelinetext] = useState("");
   const [backtext, setBacktext] = useState("");
