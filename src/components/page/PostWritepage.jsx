@@ -180,6 +180,8 @@ export default function PostWritePage(props) {
               ? Datas.func[2].content
               : ""
           );
+
+          setVideo(Datas.video || "");
         }
         setDummy(Datas);
         console.log(dummy);
@@ -672,30 +674,34 @@ export default function PostWritePage(props) {
             }
           }}
         />
-      </div>
-
-      <div className={styles.emailContainer}>
-        <input
-          className={styles.comment}
-          label="email"
-          type="email"
-          placeholder="이메일을 입력하세요."
-          maxLength={60}
-          value={email}
-          onChange={(e) => {
-            setEmail(e.target.value);
-            const length = e.target.value.length;
-            setEmaillength(length);
-            if (length >= 60) {
-              e.target.value = e.target.value.substring(0, 60);
-              alert("글자초과됨");
-            }
-          }}
-        />
+        <div className={styles.videoContainer}>
+          <h4>Video</h4>
+          <iframe
+            width="1200"
+            height="720"
+            src={video}
+            title="YouTube video player"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+          ></iframe>
+          <input
+            className={styles.video}
+            label="text"
+            type="text"
+            placeholder="유튜브 링크를 올려주세요."
+            maxLength={60}
+            value={video}
+            onChange={(e) => {
+              setVideo(e.target.value);
+            }}
+          />
+        </div>
       </div>
 
       <div className={styles.btnContainer}>
         <Button
+          type={"big"}
           title="작성하기"
           onClick={() => {
             // 텍스트 영역에서 추가 후 입력이 안되었을 때 내용을 입력해 달라는 식 추가
