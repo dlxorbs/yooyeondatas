@@ -315,6 +315,7 @@ export default function PostWritePage(props) {
         .doc(data.studentid + "_" + data.type)
         .update(updateObj)
         .then(() => {
+          alert("작성되었습니다.");
           nav("/");
           console.log(func03text);
         });
@@ -323,6 +324,7 @@ export default function PostWritePage(props) {
         .doc(data.studentid + "_" + data.type)
         .set(updatedData)
         .then(() => {
+          alert("작성되었습니다.");
           nav("/");
         });
     }
@@ -641,8 +643,7 @@ export default function PostWritePage(props) {
           title="작성하기"
           onClick={() => {
             // 텍스트 영역에서 추가 후 입력이 안되었을 때 내용을 입력해 달라는 식 추가
-            // content == "" || title == ""
-            //   ? alert("내용을 입력해주세요."):
+
             done();
           }}
         />

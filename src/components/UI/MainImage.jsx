@@ -16,7 +16,12 @@ export default function MainImg(props) {
         onClick={props.onClick}
       >
         <div className="black">
-          {" "}
+          <div className={styles.over}>
+            {" "}
+            <span>
+              {props.size} <br /> <br /> 이미지를 추가해주세요
+            </span>{" "}
+          </div>{" "}
           <span
             style={{
               display: props.display,

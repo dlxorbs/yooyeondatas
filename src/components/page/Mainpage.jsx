@@ -171,20 +171,17 @@ export default function Mainpage(props) {
             })
             .then(() => {
               if (
-                radioChecked === "s" &&
+                radioChecked &&
                 click != "전공을 선택해주세요" &&
                 $(".studentinfo").val() != "" &&
                 $(".studentid").val() != "" &&
-                $(".studentid").val().length == 10 &&
-                radioChecked
+                $(".studentid").val().length == 10
               ) {
                 nav("/thumb", {
                   state: {
                     data: data,
                   },
                 });
-                console.log($(".studentid").val());
-                console.log(radioChecked);
               } else {
                 if (click == "전공을 선택해주세요") {
                   alert("전공을 선택해주세요");
@@ -324,18 +321,24 @@ export default function Mainpage(props) {
                       onWheel={handleWheel}
                       placeholder={`  학번을 입력하세요`}
                       value={member.studentId}
-                      onChange={(e) =>
-                        TeamMemberChange(index, "studentId", e.target.value)
-                      }
+                      onChange={(e) => {
+                        TeamMemberChange(index, "studentId", e.target.value);
+                        if (index === 0) {
+                          setStudentId(member.studentId);
+                        }
+                      }}
                     />
                     <input
                       className="studentinfo"
                       type="text"
                       placeholder={`  이름을 입력하세요`}
                       value={member.studentname}
-                      onChange={(e) =>
-                        TeamMemberChange(index, "studentname", e.target.value)
-                      }
+                      onChange={(e) => {
+                        TeamMemberChange(index, "studentname", e.target.value);
+                        if (index === 0) {
+                          setStudentInfo(member.studentname);
+                        }
+                      }}
                     />
                     <ul>
                       <button
