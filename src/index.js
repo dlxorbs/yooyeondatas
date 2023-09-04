@@ -4,6 +4,7 @@ import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 import Mainpage from "./components/page/Mainpage";
 import PostWritePage from "./components/page/PostWritepage";
+import Profile from "./components/page/Profile";
 import PostView from "./components/page/PostView";
 import Header from "./components/UI/Header";
 import Thumbnailimg from "./components/page/Thumbnailimg";
@@ -17,6 +18,7 @@ root.render(
       <Route index element={<Mainpage />}></Route>
       <Route path="/thumb" element={<Thumbnailimg />}></Route>
       <Route path="/write" element={<PostWritePage />}></Route>
+      <Route path="/profile" element={<Profile />}></Route>
     </Routes>
   </BrowserRouter>
 );

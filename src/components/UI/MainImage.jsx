@@ -54,7 +54,7 @@ export default function MainImg(props) {
           placeholder={"내용 없음"}
           value={props.valueTitle}
           onChange={props.onChangeTitle}
-          maxlength={18}
+          maxlength={36}
           text={props.textTitle}
           color={"#FFFFFF"}
           limit={"18자"}

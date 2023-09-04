@@ -114,73 +114,29 @@ export default function Mainpage(props) {
       $(".studentid").val().length === 10 &&
       radioChecked
     ) {
-      if (docId.exists) {
-        // 이미 해당 문서가 존재하는 경우 업데이트 로직을 추가
-        db.collection("post")
-          .doc(studentid + "_" + radioChecked)
-          .update({
-            data,
-          })
-          .then(() => {
-            if (
-              click !== "전공을 선택해주세요" &&
-              $(".studentinfo").val() !== "" &&
-              $(".studentid").val() !== "" &&
-              $(".studentid").val().length === 10 &&
-              radioChecked
-            ) {
-              nav("/thumb", {
-                state: {
-                  data: data,
-                },
-              });
-              console.log($(".studentid").val());
-              console.log(radioChecked);
-            } else {
-              // 알림을 한국어로 변경
-              if (click === "전공을 선택해주세요") {
-                alert("전공을 선택해주세요");
-              }
-              if ($(".studentinfo").val() === "") {
-                alert("이름을 입력해주세요");
-              }
-              if ($(".studentid").val() === "") {
-                alert("학번을 입력해주세요");
-              }
-              if (radioChecked === false) {
-                alert("작품정보를 입력해주세요");
-              }
-              if ($(".studentid").val().length !== 10) {
-                alert("학번은 10자리로 입력해 주세요.");
-              }
-            }
-          });
-      } else {
-        if (
-          click !== "전공을 선택해주세요" &&
-          $(".studentinfo").val() !== "" &&
-          $(".studentid").val() !== "" &&
-          radioChecked
-        ) {
-          // 해당 문서가 없는 경우 새로운 문서를 생성
+      if (radioChecked === "s") {
+        if (docId.exists) {
+          // 이미 해당 문서가 존재하는 경우 업데이트 로직을 추가
           db.collection("post")
             .doc(studentid + "_" + radioChecked)
-            .set({
+            .update({
               data,
             })
             .then(() => {
               if (
-                radioChecked &&
                 click !== "전공을 선택해주세요" &&
                 $(".studentinfo").val() !== "" &&
                 $(".studentid").val() !== "" &&
-                $(".studentid").val().length === 10
+                $(".studentid").val().length === 10 &&
+                radioChecked
               ) {
                 nav("/thumb", {
                   state: {
                     data: data,
                   },
                 });
+                console.log($(".studentid").val());
+                console.log(radioChecked);
               } else {
                 // 알림을 한국어로 변경
                 if (click === "전공을 선택해주세요") {
@@ -200,82 +156,132 @@ export default function Mainpage(props) {
                 }
               }
             });
+        } else {
+          if (
+            click !== "전공을 선택해주세요" &&
+            $(".studentinfo").val() !== "" &&
+            $(".studentid").val() !== "" &&
+            radioChecked
+          ) {
+            // 해당 문서가 없는 경우 새로운 문서를 생성
+            db.collection("post")
+              .doc(studentid + "_" + radioChecked)
+              .set({
+                data,
+              })
+              .then(() => {
+                if (
+                  radioChecked &&
+                  click !== "전공을 선택해주세요" &&
+                  $(".studentinfo").val() !== "" &&
+                  $(".studentid").val() !== "" &&
+                  $(".studentid").val().length === 10
+                ) {
+                  nav("/thumb", {
+                    state: {
+                      data: data,
+                    },
+                  });
+                } else {
+                  // 알림을 한국어로 변경
+                  if (click === "전공을 선택해주세요") {
+                    alert("전공을 선택해주세요");
+                  }
+                  if ($(".studentinfo").val() === "") {
+                    alert("이름을 입력해주세요");
+                  }
+                  if ($(".studentid").val() === "") {
+                    alert("학번을 입력해주세요");
+                  }
+                  if (radioChecked === false) {
+                    alert("작품정보를 입력해주세요");
+                  }
+                  if ($(".studentid").val().length !== 10) {
+                    alert("학번은 10자리로 입력해 주세요.");
+                  }
+                }
+              });
+          }
         }
       }
-    } else if (radioChecked === "s") {
-      // 알림을 한국어로 변경
-      if (click === "전공을 선택해주세요") {
-        alert("전공을 선택해주세요");
-      }
-      if ($(".studentinfo").val() === "") {
-        alert("이름을 입력해주세요");
-      }
-      if ($(".studentid").val() === "") {
-        alert("학번을 입력해주세요");
-      }
-      if (radioChecked === false) {
-        alert("작품정보를 입력해주세요");
-      }
-      if ($(".studentid").val().length !== 10) {
-        alert("학번은 10자리로 입력해 주세요.");
-      }
-    } else if (radioChecked === "t") {
-      // 알림을 한국어로 변경
-      let memberIncomplete = false;
-      teamMembers.forEach((member, index) => {
-        if (
-          member.studentId === "" ||
-          member.studentname === "" ||
-          member.major === ""
-        ) {
-          alert(`팀원 ${index + 1}의 정보를 모두 입력해주세요.`);
-          memberIncomplete = true;
-        }
-      });
+      if (radioChecked === "t") {
+        // 팀원 중 하나라도 전공을 선택하지 않은 경우 작성 불가
+        const allMembersComplete = teamMembers.every(
+          (member) =>
+            member.studentId !== "" &&
+            member.studentname !== "" &&
+            member.major !== "" &&
+            member.studentId.length === 10
+        );
 
-      if (!memberIncomplete) {
-        // 팀원 정보가 모두 입력된 경우
-        if (
-          click === "전공을 선택해주세요" ||
-          $(".studentinfo").val() === "" ||
-          $(".studentid").val() === "" ||
-          !radioChecked
-        ) {
-          // 알림을 한국어로 변경
-          if (click === "전공을 선택해주세요") {
-            alert("전공을 선택해주세요");
-          }
-          if ($(".studentinfo").val() === "") {
-            alert("이름을 입력해주세요");
-          }
-          if ($(".studentid").val() === "") {
-            alert("학번을 입력해주세요");
-          }
-          if (!radioChecked) {
-            alert("작품정보를 입력해주세요");
+        if (allMembersComplete) {
+          // 팀원 정보가 모두 입력된 경우
+          if (docId.exists) {
+            // 이미 해당 문서가 존재하는 경우 업데이트 로직을 추가
+            db.collection("post")
+              .doc(studentid + "_" + radioChecked)
+              .update({
+                data,
+              })
+              .then(() => {
+                if (
+                  click !== "전공을 선택해주세요" &&
+                  $(".studentinfo").val() !== "" &&
+                  $(".studentid").val() !== "" &&
+                  $(".studentid").val().length === 10 &&
+                  radioChecked
+                ) {
+                  nav("/thumb", {
+                    state: {
+                      data: data,
+                    },
+                  });
+                  console.log($(".studentid").val());
+                  console.log(radioChecked);
+                }
+              });
+          } else {
+            if (
+              click !== "전공을 선택해주세요" &&
+              $(".studentinfo").val() !== "" &&
+              $(".studentid").val() !== "" &&
+              $(".studentid").val().length === 10 &&
+              radioChecked
+            ) {
+              // 해당 문서가 없는 경우 새로운 문서를 생성
+              db.collection("post")
+                .doc(studentid + "_" + radioChecked)
+                .set({
+                  data,
+                })
+                .then(() => {
+                  nav("/thumb", {
+                    state: {
+                      data: data,
+                    },
+                  });
+                });
+            } else {
+              // 알림을 한국어로 변경
+              if (click === "전공을 선택해주세요") {
+                alert("전공을 선택해주세요");
+              }
+              if ($(".studentinfo").val() === "") {
+                alert("이름을 입력해주세요");
+              }
+              if ($(".studentid").val() === "") {
+                alert("학번을 입력해주세요");
+              }
+              if (radioChecked === false) {
+                alert("작품정보를 입력해주세요");
+              }
+              if ($(".studentid").val().length !== 10) {
+                alert("학번은 10자리로 입력해 주세요.");
+              }
+            }
           }
         } else {
-          // 팀원 정보가 모두 입력되었고, 필수 정보도 입력된 경우
-          db.collection("post")
-            .doc(studentid + "_" + radioChecked)
-            .set({
-              data,
-            })
-            .then(() => {
-              if (
-                radioChecked &&
-                click !== "전공을 선택해주세요" &&
-                $(".studentinfo").val() !== "" &&
-                $(".studentid").val() !== "" &&
-                $(".studentid").val().length === 10
-              ) {
-                nav("/thumb", {
-                  state: {
-                    data: data,
-                  },
-                });
-              }
-            });
+          alert("팀원들의 정보를 모두 입력해주세요.");
         }
       }
     }
