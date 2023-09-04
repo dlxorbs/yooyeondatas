@@ -25,7 +25,7 @@ export default function Mainpage(props) {
 
   // 팀원 정보
   const [teamMembers, setTeamMembers] = useState([
-    { studentId: "", studentInfo: "", major: "1", toggle: false },
+    { studentId: "", studentname: "", major: "", toggle: false },
   ]);
 
   const data = {
@@ -34,7 +34,17 @@ export default function Mainpage(props) {
     major: major,
     type: radioChecked,
     img: thumbnail,
+    teamMembers: radioChecked === "t" ? teamMembers : [],
   };
+
+  $("form").on("focus", "input[type=number]", function (e) {
+    $(this).on("wheel.disableScroll", function (e) {
+      e.preventDefault();
+    });
+  });
+  $("form").on("blur", "input[type=number]", function (e) {
+    $(this).off("wheel.disableScroll");
+  });
 
   useEffect(() => {
     async function fetchData() {
@@ -54,11 +64,14 @@ export default function Mainpage(props) {
     fetchData(); // 컴포넌트가 마운트될 때 데이터 확인
   }, [studentid, radioChecked]);
 
+  const handleWheel = (e) => {
+    e.preventDefault();
+  };
   const addTeamMember = () => {
     if (teamMembers.length < 4) {
       setTeamMembers([
         ...teamMembers,
-        { studentId: "", studentInfo: "", major: "", toggle: false },
+        { studentId: "", studentname: "", major: "", toggle: false },
       ]);
     }
   };
@@ -75,6 +88,7 @@ export default function Mainpage(props) {
     updatedMembers[index][field] = value;
     setTeamMembers(updatedMembers);
   };
+
   const selectMajor = (index, majorValue) => {
     const updatedMembers = [...teamMembers];
     updatedMembers[index].major = majorValue;
@@ -246,6 +260,7 @@ export default function Mainpage(props) {
               <input
                 className="studentid"
                 type="number"
+                onWheel={handleWheel}
                 placeholder=" 학번을 입력해주세요"
                 onChange={(e) => {
                   setStudentId(e.target.value);
@@ -306,6 +321,7 @@ export default function Mainpage(props) {
                     <input
                       className="studentid"
                       type="number"
+                      onWheel={handleWheel}
                       placeholder={`  학번을 입력하세요`}
                       value={member.studentId}
                       onChange={(e) =>
@@ -316,9 +332,9 @@ export default function Mainpage(props) {
                       className="studentinfo"
                       type="text"
                       placeholder={`  이름을 입력하세요`}
-                      value={member.studentInfo}
+                      value={member.studentname}
                       onChange={(e) =>
-                        TeamMemberChange(index, "studentInfo", e.target.value)
+                        TeamMemberChange(index, "studentname", e.target.value)
                       }
                     />
                     <ul>
@@ -329,7 +345,9 @@ export default function Mainpage(props) {
                           toggleMajor(index);
                         }}
                       >
-                        {member.major === "1"
+                        {member.major == ""
+                          ? "전공을 입력해주세요"
+                          : member.major == "1"
                           ? "산업디자인공학"
                           : "미디어디자인공학"}
                       </button>
@@ -338,9 +356,13 @@ export default function Mainpage(props) {
                           <li
                             value="산업디자인공학"
                             onClick={(e) => {
+                              selectMajor(index, 1);
                               TeamMemberChange(index, "major", "1");
                               setClick("산업디자인공학");
                               toggleMajor(index);
+                              if (index == 1) {
+                                setMajor("1");
+                              }
                             }}
                           >
                             산업디자인공학
@@ -348,9 +370,13 @@ export default function Mainpage(props) {
                           <li
                             value="미디어디자인공학"
                             onClick={(e) => {
+                              selectMajor(index, 2);
                               TeamMemberChange(index, "major", "2");
                               setClick("미디어디자인공학");
                               toggleMajor(index);
+                              if (index == 1) {
+                                setMajor("2");
+                              }
                             }}
                           >
                             미디어디자인공학
@@ -386,7 +412,7 @@ export default function Mainpage(props) {
           title="글작성"
           onClick={(e) => {
             next();
-            console.log(teamMembers);
+            console.log(data);
           }}
         ></Button>
       </div>
