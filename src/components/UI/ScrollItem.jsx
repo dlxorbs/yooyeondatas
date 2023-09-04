@@ -12,8 +12,16 @@ export default function ScrollItem(props) {
       }}
       onClick={props.onClick}
     >
-      <div className={styles.over}></div>
-      <span style={{ display: props.display, textAlign: "center" }}>
+      <div className={styles.over}>
+        {" "}
+        <span>
+          {props.size} <br /> <br /> 이미지를 추가해주세요
+        </span>{" "}
+      </div>
+      <span
+        className={styles.notice}
+        style={{ display: props.display, textAlign: "center" }}
+      >
         {props.size}
         <br />
         <br /> 이미지를 추가해주세요

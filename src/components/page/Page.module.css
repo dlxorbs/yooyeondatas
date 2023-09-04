@@ -106,6 +106,28 @@ h1 {
   margin-top: 24px;
 }
 
+.commentContainer,
+.emailContainer {
+  width: 100%;
+}
+.comment {
+  width: calc(100% - 24px);
+  height: 40px;
+  border: none;
+  margin: 20px 0 0 0;
+  box-shadow: 0px 0px 4px 0px #00000020 inset;
+  font-family: "Pretendard-Regular";
+  border-radius: 8px;
+  padding: 4px 12px;
+}
+
+.comment::-webkit-input-placeholder {
+  color: #33333360;
+}
+
+h4 {
+}
+
 @media (max-width: 1500px) {
   .Page_Wrapper {
     position: relative;

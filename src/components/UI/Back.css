@@ -42,10 +42,11 @@ h4 {
 }
 
 .mainback {
-  width: 1200px;
+  width: 940px;
   margin: auto;
   position: absolute;
   bottom: 56px;
+  margin: 0 260px 0 0;
 }
 
 .thumbnail {

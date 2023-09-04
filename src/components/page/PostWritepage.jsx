@@ -19,6 +19,7 @@ import MainImg from "../UI/MainImage";
 import Right from "../UI/Right";
 import Left from "../UI/Left";
 import Center from "../UI/Center";
+import Loading from "../UI/Loading";
 
 export default function PostWritePage(props) {
   const nav = useNavigate();
@@ -53,6 +54,8 @@ export default function PostWritePage(props) {
   const [function03img, setFunction03img] = useState("");
   const [function03thumb, setFunction03thumb] = useState(symbol700);
 
+  const [isLoading, setIsLoading] = useState(false);
+
   // 텍스트 길이 제한
   const [maintextlength, setMaintextlength] = useState("");
   const [onelinetextlength, setOnelinetextlength] = useState("");
@@ -62,8 +65,6 @@ export default function PostWritePage(props) {
   const [func01textlength, setFunc01textlength] = useState("");
   const [func02textlength, setFunc02textlength] = useState("");
   const [func03textlength, setFunc03textlength] = useState("");
-
-  // 길이제한에 쓰는 데이터를 넣어서 이상하게 나오는중
 
   const [maintext, setMaintext] = useState("");
   const [onelinetext, setOnelinetext] = useState("");
@@ -109,6 +110,16 @@ export default function PostWritePage(props) {
       content: "",
     },
   ]);
+
+  const [video, setVideo] = useState("");
+
+  // 이메일 입력 상태 관리
+  const [email, setEmail] = useState("");
+  const [emaillength, setEmaillength] = useState("");
+  // 한 마디 입력 상태 관리
+  const [comment, setComment] = useState("");
+  const [commentlength, setCommentlength] = useState("");
+
   let mainUrl,
     backgroundUrl,
     researchUrl,
@@ -116,10 +127,6 @@ export default function PostWritePage(props) {
     function01Url,
     function02Url,
     function03Url;
-
-  useEffect(() => {
-    console.log(onelinetext);
-  }, [onelinetext]);
 
   // 작성했던 데이터 불러오기
   useEffect(function () {
@@ -203,130 +210,153 @@ export default function PostWritePage(props) {
     // 백그라운드
     var storageRef = storage.ref();
 
-    // 이미지 업로드와 URL 저장 부분
-    if (mainimg) {
-      const mainRef = storageRef.child(
-        data.studentid + "_" + data.type + "/" + "main"
-      );
-      await mainRef.put(mainimg);
-      mainUrl = await getDownloadURL(mainRef);
-    }
-    if (backimg) {
-      const backgroundRef = storageRef.child(
-        data.studentid + "_" + data.type + "/" + "background"
-      );
-      await backgroundRef.put(backimg);
-      backgroundUrl = await getDownloadURL(backgroundRef);
-    }
-    if (researchimg) {
-      const researchRef = storageRef.child(
-        data.studentid + "_" + data.type + "/" + "research"
-      );
-      await researchRef.put(researchimg);
-      researchUrl = await getDownloadURL(researchRef);
-    }
-    if (goalimg) {
-      const goalRef = storageRef.child(
-        data.studentid + "_" + data.type + "/" + "goal"
-      );
-      await goalRef.put(goalimg);
-      goalUrl = await getDownloadURL(goalRef);
-    }
-    if (function01img) {
-      const function01Ref = storageRef.child(
-        data.studentid + "_" + data.type + "/" + "function01"
-      );
-      await function01Ref.put(function01img);
-      function01Url = await getDownloadURL(function01Ref);
-    }
-    if (function02img) {
-      const function02Ref = storageRef.child(
-        data.studentid + "_" + data.type + "/" + "function02"
-      );
-      await function02Ref.put(function02img);
-      function02Url = await getDownloadURL(function02Ref);
-    }
-    if (function03img) {
-      const function03Ref = storageRef.child(
-        data.studentid + "_" + data.type + "/" + "function03"
-      );
-      await function03Ref.put(function03img);
-      function03Url = await getDownloadURL(function03Ref);
-    }
+    setIsLoading(true);
 
-    // db 업데이트 부분
-    const docId = await db
-      .collection("post")
-      .doc(data.studentid + "_" + data.type)
-      .get();
+    try {
+      // 이미지 업로드와 URL 저장 부분
+      if (mainimg) {
+        const mainRef = storageRef.child(
+          data.studentid + "_" + data.type + "/" + "main"
+        );
+        await mainRef.put(mainimg);
+        mainUrl = await getDownloadURL(mainRef);
+      }
+      if (backimg) {
+        const backgroundRef = storageRef.child(
+          data.studentid + "_" + data.type + "/" + "background"
+        );
+        await backgroundRef.put(backimg);
+        backgroundUrl = await getDownloadURL(backgroundRef);
+      }
+      if (researchimg) {
+        const researchRef = storageRef.child(
+          data.studentid + "_" + data.type + "/" + "research"
+        );
+        await researchRef.put(researchimg);
+        researchUrl = await getDownloadURL(researchRef);
+      }
+      if (goalimg) {
+        const goalRef = storageRef.child(
+          data.studentid + "_" + data.type + "/" + "goal"
+        );
+        await goalRef.put(goalimg);
+        goalUrl = await getDownloadURL(goalRef);
+      }
+      if (function01img) {
+        const function01Ref = storageRef.child(
+          data.studentid + "_" + data.type + "/" + "function01"
+        );
+        await function01Ref.put(function01img);
+        function01Url = await getDownloadURL(function01Ref);
+      }
+      if (function02img) {
+        const function02Ref = storageRef.child(
+          data.studentid + "_" + data.type + "/" + "function02"
+        );
+        await function02Ref.put(function02img);
+        function02Url = await getDownloadURL(function02Ref);
+      }
+      if (function03img) {
+        const function03Ref = storageRef.child(
+          data.studentid + "_" + data.type + "/" + "function03"
+        );
+        await function03Ref.put(function03img);
+        function03Url = await getDownloadURL(function03Ref);
+      }
 
-    const updatedData = {
-      main: {
-        works: maintext,
-        img: mainUrl !== undefined ? mainUrl : dummy.main?.img || "",
-        oneline: onelinetext,
-      },
-      background: {
-        img:
-          backgroundUrl !== undefined
-            ? backgroundUrl
-            : dummy.background?.img || "", // 유효한 URL이 없을 경우에는 빈 문자열로 설정
-        content: backtext,
-      },
-      research: {
-        img:
-          researchUrl !== undefined ? researchUrl : dummy.research?.img || "",
-        content: restext,
-      },
-      goals: {
-        img: goalUrl !== undefined ? goalUrl : dummy.goals?.img || "",
-        content: goaltext,
-      },
-      func: [
-        {
-          img:
-            function01Url !== undefined
-              ? function01Url
-              : getImageUrl(function01Url, 0),
-          content: func01text,
-        },
-        {
-          img:
-            function02Url !== undefined
-              ? function02Url
-              : getImageUrl(function02Url, 1),
-          content: func02text,
-        },
-        {
-          img:
-            function03Url !== undefined
-              ? function03Url
-              : getImageUrl(function03Url, 2),
-          content: func03text,
-        },
-      ],
-      video: "비디오 주소",
-    };
-
-    if (docId.exists) {
-      const updateObj = { ...dummy, ...updatedData };
-      console.log(updateObj);
-
-      console.log(done);
-      db.collection("post")
+      // db 업데이트 부분
+      const docId = await db
+        .collection("post")
         .doc(data.studentid + "_" + data.type)
-        .update(updateObj)
-        .then(() => {
-          nav("/");
-          console.log(func03text);
-        });
-    } else {
-      db.collection("post")
-        .doc(data.studentid + "_" + data.type)
-        .set(updatedData)
-        .then(() => {
-          nav("/");
-        });
+        .get();
+
+      const updatedData = {
+        main: {
+          works: maintext,
+          img: mainUrl !== undefined ? mainUrl : dummy.main?.img || "",
+          oneline: onelinetext,
+        },
+        background: {
+          img:
+            backgroundUrl !== undefined
+              ? backgroundUrl
+              : dummy.background?.img || "",
+          content: backtext,
+        },
+        research: {
+          img:
+            researchUrl !== undefined ? researchUrl : dummy.research?.img || "",
+          content: restext,
+        },
+        goals: {
+          img: goalUrl !== undefined ? goalUrl : dummy.goals?.img || "",
+          content: goaltext,
+        },
+        func: [
+          {
+            img:
+              function01Url !== undefined
+                ? function01Url
+                : getImageUrl(function01Url, 0),
+            content: func01text,
+          },
+          {
+            img:
+              function02Url !== undefined
+                ? function02Url
+                : getImageUrl(function02Url, 1),
+            content: func02text,
+          },
+          {
+            img:
+              function03Url !== undefined
+                ? function03Url
+                : getImageUrl(function03Url, 2),
+            content: func03text,
+          },
+        ],
+        video: video || "",
+      };
+
+      if (docId.exists) {
+        const updateObj = { ...dummy, ...updatedData };
+        console.log(updateObj);
+
+        console.log(done);
+        db.collection("post")
+          .doc(data.studentid + "_" + data.type)
+          .update(updateObj)
+          .then(() => {
+            if (data.type == "s") {
+              nav("/profile", {
+                state: {
+                  data: data,
+                },
+              });
+            } else {
+              nav("/");
+            }
+            console.log(func03text);
+          });
+      } else {
+        db.collection("post")
+          .doc(data.studentid + "_" + data.type)
+          .set(updatedData)
+          .then(() => {
+            if (data.type == "s") {
+              nav("/profile", {
+                state: {
+                  data: data,
+                },
+              });
+            } else {
+              nav("/");
+            }
+          });
+      }
+    } catch (error) {
+      console.error("이미지 업로드 및 URL 저장 실패:", error);
+      setIsLoading(false); // 에러 발생 시에도 로딩 상태 비활성화
     }
   };
 
@@ -334,6 +364,7 @@ export default function PostWritePage(props) {
 
   return (
     <div className={styles.Page_Wrapper}>
+      {isLoading && <Loading />}
       <MainImg
         size={"3:1 비율의"}
         file={"main"}
@@ -347,11 +378,13 @@ export default function PostWritePage(props) {
             works: e.target.value,
           }));
           setMaintext(e.target.value);
+          e.target.style.height = "112px";
+          e.target.style.height = e.target.scrollHeight + "px";
           console.log(e.target.value.length);
           const length = e.target.value.length;
           setMaintextlength(length);
-          if (length >= 525) {
-            e.target.value = e.target.value.substring(0, 525);
+          if (length >= 36) {
+            e.target.value = e.target.value.substring(0, 36);
             alert("글자초과됨");
           }
         }}
@@ -364,8 +397,8 @@ export default function PostWritePage(props) {
           console.log(e.target.value.length);
           const length = e.target.value.length;
           setOnelinetextlength(length);
-          if (length >= 525) {
-            e.target.value = e.target.value.substring(0, 525);
+          if (length >= 41) {
+            e.target.value = e.target.value.substring(0, 40);
             alert("글자초과됨");
           }
         }}
@@ -480,7 +513,7 @@ export default function PostWritePage(props) {
           imgwidth={1200}
           imgheight={460}
           file={"goal"}
-          head={"Goal"}
+          head={"Project Goal"}
           width={550}
           text={goaltextlength}
           onChange={(e) => {
@@ -520,10 +553,11 @@ export default function PostWritePage(props) {
 
         <Left
           size={"752X500"}
+          limit={"344자"}
           imgwidth={752}
           imgheight={500}
           file={"function01"}
-          head={"Function01"}
+          head={"Function 01"}
           width={373}
           onChange={(e) => {
             const { value } = e.target;
@@ -531,8 +565,8 @@ export default function PostWritePage(props) {
             setFunc01text(e.target.value);
             const length = e.target.value.length;
             setFunc01textlength(length);
-            if (length >= 525) {
-              e.target.value = e.target.value.substring(0, 525);
+            if (length >= 344) {
+              e.target.value = e.target.value.substring(0, 344);
               alert("글자초과됨");
             }
           }}
@@ -562,8 +596,9 @@ export default function PostWritePage(props) {
           size={"752X500"}
           imgwidth={752}
           imgheight={500}
+          limit={"344자"}
           file={"function02"}
-          head={"Function02"}
+          head={"Function 02"}
           width={373}
           onChange={(e) => {
             const { value } = e.target;
@@ -571,8 +606,8 @@ export default function PostWritePage(props) {
             setFunc02text(e.target.value);
             const length = e.target.value.length;
             setFunc02textlength(length);
-            if (length >= 525) {
-              e.target.value = e.target.value.substring(0, 525);
+            if (length >= 344) {
+              e.target.value = e.target.value.substring(0, 344);
               alert("글자초과됨");
             }
           }}
@@ -599,10 +634,11 @@ export default function PostWritePage(props) {
         {/* 기능 03 */}
         <Left
           size={"752X500"}
+          limit={"344자"}
           imgwidth={752}
           imgheight={500}
           file={"function03"}
-          head={"Function03"}
+          head={"Function 03"}
           width={373}
           onChange={(e) => {
             const { value } = e.target;
@@ -610,8 +646,8 @@ export default function PostWritePage(props) {
             setFunc03text(e.target.value);
             const length = e.target.value.length;
             setFunc03textlength(length);
-            if (length >= 525) {
-              e.target.value = e.target.value.substring(0, 525);
+            if (length >= 344) {
+              e.target.value = e.target.value.substring(0, 344);
               alert("글자초과됨");
             }
           }}
@@ -638,13 +674,31 @@ export default function PostWritePage(props) {
         />
       </div>
 
+      <div className={styles.emailContainer}>
+        <input
+          className={styles.comment}
+          label="email"
+          type="email"
+          placeholder="이메일을 입력하세요."
+          maxLength={60}
+          value={email}
+          onChange={(e) => {
+            setEmail(e.target.value);
+            const length = e.target.value.length;
+            setEmaillength(length);
+            if (length >= 60) {
+              e.target.value = e.target.value.substring(0, 60);
+              alert("글자초과됨");
+            }
+          }}
+        />
+      </div>
+
       <div className={styles.btnContainer}>
         <Button
           title="작성하기"
           onClick={() => {
             // 텍스트 영역에서 추가 후 입력이 안되었을 때 내용을 입력해 달라는 식 추가
-            // content == "" || title == ""
-            //   ? alert("내용을 입력해주세요."):
             done();
           }}
         />

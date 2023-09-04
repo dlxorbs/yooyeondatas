@@ -127,7 +127,7 @@ export default function Thumbnailimg(props) {
   return (
     <div className={styles.Page_Wrapper}>
       <div className="LoginContainer">
-        <h1>썸네일을 작성해주세요.</h1>
+        <h1>썸네일을 추가해주세요.</h1>
         <div className="thumbnail"></div>
         <ScrollItem
           imgwidth={285}

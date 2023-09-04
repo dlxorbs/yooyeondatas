@@ -11,6 +11,7 @@ export default function Button(props) {
       className={styles.borderedButton}
       style={{ "--margin": props.margin }}
       onClick={props.onClick}
+      type="button"
     >
       {props.title || "button"}
     </button>
