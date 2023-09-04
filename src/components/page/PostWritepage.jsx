@@ -347,11 +347,13 @@ export default function PostWritePage(props) {
             works: e.target.value,
           }));
           setMaintext(e.target.value);
+          e.target.style.height = "112px";
+          e.target.style.height = e.target.scrollHeight + "px";
           console.log(e.target.value.length);
           const length = e.target.value.length;
           setMaintextlength(length);
-          if (length >= 525) {
-            e.target.value = e.target.value.substring(0, 525);
+          if (length >= 18) {
+            e.target.value = e.target.value.substring(0, 17);
             alert("글자초과됨");
           }
         }}
@@ -364,8 +366,8 @@ export default function PostWritePage(props) {
           console.log(e.target.value.length);
           const length = e.target.value.length;
           setOnelinetextlength(length);
-          if (length >= 525) {
-            e.target.value = e.target.value.substring(0, 525);
+          if (length >= 41) {
+            e.target.value = e.target.value.substring(0, 40);
             alert("글자초과됨");
           }
         }}
@@ -520,6 +522,7 @@ export default function PostWritePage(props) {
 
         <Left
           size={"752X500"}
+          limit={"344자"}
           imgwidth={752}
           imgheight={500}
           file={"function01"}
@@ -531,8 +534,8 @@ export default function PostWritePage(props) {
             setFunc01text(e.target.value);
             const length = e.target.value.length;
             setFunc01textlength(length);
-            if (length >= 525) {
-              e.target.value = e.target.value.substring(0, 525);
+            if (length >= 344) {
+              e.target.value = e.target.value.substring(0, 344);
               alert("글자초과됨");
             }
           }}
@@ -562,6 +565,7 @@ export default function PostWritePage(props) {
           size={"752X500"}
           imgwidth={752}
           imgheight={500}
+          limit={"344자"}
           file={"function02"}
           head={"Function 02"}
           width={373}
@@ -571,8 +575,8 @@ export default function PostWritePage(props) {
             setFunc02text(e.target.value);
             const length = e.target.value.length;
             setFunc02textlength(length);
-            if (length >= 525) {
-              e.target.value = e.target.value.substring(0, 525);
+            if (length >= 344) {
+              e.target.value = e.target.value.substring(0, 344);
               alert("글자초과됨");
             }
           }}
@@ -599,6 +603,7 @@ export default function PostWritePage(props) {
         {/* 기능 03 */}
         <Left
           size={"752X500"}
+          limit={"344자"}
           imgwidth={752}
           imgheight={500}
           file={"function03"}
@@ -610,8 +615,8 @@ export default function PostWritePage(props) {
             setFunc03text(e.target.value);
             const length = e.target.value.length;
             setFunc03textlength(length);
-            if (length >= 525) {
-              e.target.value = e.target.value.substring(0, 525);
+            if (length >= 344) {
+              e.target.value = e.target.value.substring(0, 344);
               alert("글자초과됨");
             }
           }}

@@ -54,10 +54,10 @@ export default function MainImg(props) {
           placeholder={"내용 없음"}
           value={props.valueTitle}
           onChange={props.onChangeTitle}
-          maxlength={230}
+          maxlength={18}
           text={props.textTitle}
           color={"#FFFFFF"}
-          limit={"230자"}
+          limit={"18자"}
           overflow={"hidden"}
           placeholdercolor={"#FFFFFF60"}
         />
@@ -70,10 +70,10 @@ export default function MainImg(props) {
           placeholder={"내용 없음"}
           value={props.valueOneline}
           onChange={props.onChangeinfo}
-          maxlength={230}
+          maxlength={40}
           color={"#FFFFFF"}
           text={props.textOneline}
-          limit={"230자"}
+          limit={"40자"}
           overflow={"hidden"}
           placeholdercolor={"#FFFFFF60"}
         />

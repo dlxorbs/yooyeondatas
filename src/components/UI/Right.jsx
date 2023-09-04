@@ -36,7 +36,7 @@ export default function Right(props) {
           overflow={"hidden"}
           text={props.text}
           maxlength={props.maxlength}
-          limit={"525자"}
+          limit={props.limit || "525자"}
           placeholdercolor={"#66666680"}
         />
       </div>

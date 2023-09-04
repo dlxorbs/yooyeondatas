@@ -27,6 +27,8 @@
   border-radius: 12px;
   box-sizing: border-box;
   font-family: "Pretendard-Regular";
+  word-break: break-all;
+  text-align: justify;
 }
 
 textarea::-webkit-input-placeholder {
