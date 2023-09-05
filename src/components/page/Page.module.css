@@ -128,6 +128,7 @@ h1 {
   align-items: center;
   justify-content: center;
 }
+
 .comment {
   width: calc(80% - 48px);
   height: 40px;
