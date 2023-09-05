@@ -238,7 +238,7 @@ export default function Mainpage(props) {
   return (
     <div className={styles.Page_Wrapper}>
       <div className="LoginContainer">
-        <h1> 제18대 온라인 졸업전시 정보 입력 </h1>
+        <h1> 제18회 온라인 졸업전시 정보 입력 </h1>
         <form className="inputcontainer">
           <div className="radio">
             <input
