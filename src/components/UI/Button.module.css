@@ -1,4 +1,7 @@
 .borderedButton {
+  position: relative;
+  overflow: hidden;
+
   padding: 8px 20px;
   font-size: 14px;
   border-radius: 8px;
@@ -14,39 +17,38 @@
 }
 
 .borderedButton:hover {
-  background-color: rgb(0, 88, 151);
+  background-color: #7698bf;
   margin: var(--margin);
 }
 
 .borderedButton:active {
-  background-color: #004c82;
+  background-color: #5a7595;
 }
 
-.smallButton {
-  /* 글쓰기 버튼의 크기 더하기 패딩값 */
-  bottom: -32px;
-  width: 100%;
-  height: 50px;
-  font-size: 24px;
-  color: #ffffff;
-  cursor: pointer;
-  border-radius: 4px;
-  border: none;
-  padding: 0;
-  background-color: #3775bb;
+.borderedButton > span {
+  position: relative;
+  z-index: 999;
 }
 
-.smallButton:hover {
-  transition: 0.2s;
-  color: #ffffff;
-  cursor: pointer;
-  background-color: #185aa5;
-  padding: 0;
-}
+.borderedButton:active .floatani {
+  position: absolute;
+  width: 90px;
+  height: 90px;
+  border-radius: 9999px;
+  background-color: transparent;
+  animation-duration: 2s;
+  animation-name: scaled;
 
-.smallButton:active {
-  transition: 0.2s;
-  color: #ffffff;
-  cursor: pointer;
-  background-color: #005ac0;
+  top: var(--top);
+  left: var(--left);
+}
+@keyframes scaled {
+  0% {
+    transform: scale(0.5);
+    background-color: #3775bb;
+  }
+  100% {
+    transform: scale(8);
+    background-color: #7698bf;
+  }
 }
