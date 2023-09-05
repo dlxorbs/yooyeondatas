@@ -113,13 +113,6 @@ export default function PostWritePage(props) {
 
   const [video, setVideo] = useState("");
 
-  // 이메일 입력 상태 관리
-  const [email, setEmail] = useState("");
-  const [emaillength, setEmaillength] = useState("");
-  // 한 마디 입력 상태 관리
-  const [comment, setComment] = useState("");
-  const [commentlength, setCommentlength] = useState("");
-
   let mainUrl,
     backgroundUrl,
     researchUrl,
@@ -317,6 +310,7 @@ export default function PostWritePage(props) {
             content: func03text,
           },
         ],
+
         video: video || "",
       };
 

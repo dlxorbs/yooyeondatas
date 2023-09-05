@@ -39,8 +39,9 @@ export default function Profile(props) {
         if (doc.exists) {
           Datas = doc.data();
         }
-        setEmail(Datas.profile.email);
-        setComment(Datas.profile.comment);
+
+        setEmail(Datas.profile?.email || "");
+        setComment(Datas.profile?.comment || "");
       });
   }, []);
 
