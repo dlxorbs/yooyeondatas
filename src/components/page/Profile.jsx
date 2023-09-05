@@ -69,7 +69,7 @@ export default function Profile(props) {
         })
         .then(() => {
           console.log(predata);
-          // nav("/");
+          nav("/");
         });
     } else {
       // 해당 문서가 없는 경우 새로운 문서를 생성
@@ -80,7 +80,7 @@ export default function Profile(props) {
         })
         .then(() => {
           console.log(profile);
-          // nav("/");
+          nav("/");
         });
     }
   };
@@ -88,10 +88,11 @@ export default function Profile(props) {
   return (
     <div className={styles.Page_Wrapper}>
       <div className="LoginContainer">
-        <h1>썸네일을 추가해주세요.</h1>
+        <h1> 자신의 정보를 입력해 주세요</h1>
         <div className="thumbnail"></div>
 
         <div className={styles.emailContainer}>
+          <span className="text">이메일을 입력하세요</span>
           <input
             className={styles.comment}
             label="email"
@@ -112,12 +113,13 @@ export default function Profile(props) {
         </div>
 
         <div className={styles.commentContainer}>
+          <span className="text">한마디를 작성해주세요</span>
           <input
             className={styles.comment}
             label="한 마디"
             type="text"
             maxLength={60}
-            placeholder="한 마디를 입력하세요."
+            placeholder="한 마디를 작성해주세요."
             value={comment}
             onChange={(e) => {
               setComment(e.target.value);
