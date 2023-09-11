@@ -77,6 +77,7 @@ export default function Thumbnailimg(props) {
       major: predata.major,
       type: predata.type,
       img: thumbUrl == undefined ? predata?.img : thumbUrl,
+      teamMembers: predata.teamMembers,
     };
 
     setpreData(data);
