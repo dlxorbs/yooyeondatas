@@ -27,7 +27,9 @@ export default function Profile(props) {
   // 한 마디 입력 상태 관리
   const [comment, setComment] = useState(location.state?.comment);
   const [commentlength, setCommentlength] = useState("");
-
+  // 한 마디 입력 상태 관리
+  const [prof, setProf] = useState(location.state?.prof);
+  const [proflength, setProflength] = useState("");
   useEffect(() => {
     console.log(predata);
 
@@ -42,6 +44,7 @@ export default function Profile(props) {
 
         setEmail(Datas.profile?.email || "");
         setComment(Datas.profile?.comment || "");
+        setProf(Datas.profile?.prof || "");
       });
   }, []);
 
@@ -52,6 +55,7 @@ export default function Profile(props) {
       // 이메일 추가
       email: email,
       comment: comment,
+      prof: prof,
     };
 
     setpreData(profile);
@@ -126,6 +130,27 @@ export default function Profile(props) {
               setComment(e.target.value);
               const length = e.target.value.length;
               setCommentlength(length);
+              if (length >= 60) {
+                e.target.value = e.target.value.substring(0, 60);
+                alert("글자초과됨");
+              }
+            }}
+          />
+        </div>
+
+        <div className={styles.commentContainer}>
+          <span className="text">지도교수님의 성함을 입력해주세요</span>
+          <input
+            className={styles.comment}
+            label="지도교수"
+            type="text"
+            maxLength={60}
+            placeholder="지도교수님의 성함을 입력해주세요."
+            value={prof}
+            onChange={(e) => {
+              setProf(e.target.value);
+              const length = e.target.value.length;
+              setProflength(length);
               if (length >= 60) {
                 e.target.value = e.target.value.substring(0, 60);
                 alert("글자초과됨");
